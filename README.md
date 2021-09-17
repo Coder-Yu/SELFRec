@@ -1,5 +1,5 @@
 <img src="https://i.ibb.co/54vTYzk/ssl-logo.png" alt="ssl-logo" border="0">
-<br>
+
 <p float="left"><img src="https://img.shields.io/badge/python-v3.7+-red"> <img src="https://img.shields.io/badge/pytorch-v1.7+-blue"> <img src="https://img.shields.io/badge/tensorflow-v1.14+-green">  <br>
 
 **SELFRec** is a Python framework for self-supervised recommendation (Supported by Python 3.7+, PyTorch 1.7+, and Tensorflow 1.14+) which integrates commonly used datasets and metrcs, and inplements a number of influential and newly state-of-the-art recommendation models. SELFRec has a lightweight architecture and provides user-friendly interfaces. It can facilitate model implementation and evaluation.
