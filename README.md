@@ -7,6 +7,8 @@
 **Founder and principal contributor**: [@Coder-Yu ](https://github.com/Coder-Yu) [@xiaxin1998](https://github.com/xiaxin1998) <br>
 **Supported by**: [@AIhongzhi](https://github.com/AIhongzhi) (<a href="https://sites.google.com/view/hongzhi-yin/home">A/Prof. Hongzhi Yin</a>, UQ)
 
+<h3>Version 1.0 coming soon...<h3>
+  
 <h2>Architecture<h2>
 <img src="https://raw.githubusercontent.com/Coder-Yu/SELFRec/main/selfrec.jpg" alt="ssl-logo" width="633" height="375" border="0">
 
@@ -19,4 +21,4 @@
 <li><b>SSR-Specific</b>: SELFRec is designed for SSR. For the data augmentation, there is a specific module that have implemented a number of model-agnostic approaches. For different SSR paradigms, SELFRec provides specific base classes and interfaces for rapid development.</li>
 </ul>
 
-Version 1.0 coming soon...
+
