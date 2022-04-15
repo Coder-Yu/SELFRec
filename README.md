@@ -8,7 +8,7 @@
 **Supported by**: [@AIhongzhi](https://github.com/AIhongzhi) (<a href="https://sites.google.com/view/hongzhi-yin/home">A/Prof. Hongzhi Yin</a>, UQ)
 
  ```diff
-- Version 1.0 coming soon (before 04/15)...
+- Version 1.0 coming soon (before 04/20)... (sorry for the delay caused by personal health issue)
 ```
   
 <h2>Architecture<h2>
