@@ -2,15 +2,14 @@ from base.graph_recommender import GraphRecommender
 from data.augmentor import GraphAugmentor
 import tensorflow as tf
 from base.tf_interface import TFGraphInterface
-from util.loss import bpr_loss,infoNCE
+from util.loss import bpr_loss, infoNCE
 from util.conf import OptionConf
-import numpy as np
-import scipy.sparse as sp
-import random
 import os
 from util.sampler import next_batch_pairwise
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
+
+# Paper: self-supervised graph learning for recommendation. SIGIR'21
 
 class SGL(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
@@ -51,44 +50,55 @@ class SGL(GraphRecommender):
         self.v_idx = tf.placeholder(tf.int32, name="v_idx")
         self.neg_idx = tf.placeholder(tf.int32, name="neg_holder")
         self.norm_adj = TFGraphInterface.convert_sparse_mat_to_tensor(self.data.norm_adj)
-        ego_embeddings = tf.concat([self.user_embeddings,self.item_embeddings], axis=0)
+        ego_embeddings = tf.concat([self.user_embeddings, self.item_embeddings], axis=0)
         view1_embeddings = ego_embeddings
         view2_embeddings = ego_embeddings
         all_view1_embeddings = [view1_embeddings]
         all_view2_embeddings = [view2_embeddings]
         all_embeddings = [ego_embeddings]
-        #variable initialization
+        # variable initialization
         self._create_variable()
         for k in range(0, self.n_layers):
             if self.aug_type in [0, 1]:
-                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub1'], self.sub_mat['adj_values_sub1'], self.sub_mat['adj_shape_sub1'])
-                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub2'], self.sub_mat['adj_values_sub2'], self.sub_mat['adj_shape_sub2'])
+                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub1'],
+                                                                  self.sub_mat['adj_values_sub1'],
+                                                                  self.sub_mat['adj_shape_sub1'])
+                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub2'],
+                                                                  self.sub_mat['adj_values_sub2'],
+                                                                  self.sub_mat['adj_shape_sub2'])
             else:
-                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub1%d' % k], self.sub_mat['adj_values_sub1%d' % k], self.sub_mat['adj_shape_sub1%d' % k])
-                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub2%d' % k], self.sub_mat['adj_values_sub2%d' % k], self.sub_mat['adj_shape_sub2%d' % k])
+                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub1%d' % k],
+                                                                  self.sub_mat['adj_values_sub1%d' % k],
+                                                                  self.sub_mat['adj_shape_sub1%d' % k])
+                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub2%d' % k],
+                                                                  self.sub_mat['adj_values_sub2%d' % k],
+                                                                  self.sub_mat['adj_shape_sub2%d' % k])
 
-        #view1 - view
+        # view1 - view
         for k in range(self.n_layers):
-            view1_embeddings = tf.sparse_tensor_dense_matmul(self.sub_mat['sub_mat_1%d' % k],view1_embeddings)
+            view1_embeddings = tf.sparse_tensor_dense_matmul(self.sub_mat['sub_mat_1%d' % k], view1_embeddings)
             all_view1_embeddings += [view1_embeddings]
         all_view1_embeddings = tf.stack(all_view1_embeddings, 1)
         all_view1_embeddings = tf.reduce_mean(all_view1_embeddings, axis=1, keepdims=False)
-        self.view1_user_embeddings, self.view1_item_embeddings = tf.split(all_view1_embeddings, [self.data.user_num, self.data.item_num], 0)
+        self.view1_user_embeddings, self.view1_item_embeddings = tf.split(all_view1_embeddings,
+                                                                          [self.data.user_num, self.data.item_num], 0)
 
-        #view2 - view
+        # view2 - view
         for k in range(self.n_layers):
-            view2_embeddings = tf.sparse_tensor_dense_matmul(self.sub_mat['sub_mat_2%d' % k],view2_embeddings)
+            view2_embeddings = tf.sparse_tensor_dense_matmul(self.sub_mat['sub_mat_2%d' % k], view2_embeddings)
             all_view2_embeddings += [view2_embeddings]
         all_view2_embeddings = tf.stack(all_view2_embeddings, 1)
         all_view2_embeddings = tf.reduce_mean(all_view2_embeddings, axis=1, keepdims=False)
-        self.view2_user_embeddings, self.view2_item_embeddings = tf.split(all_view2_embeddings, [self.data.user_num, self.data.item_num], 0)
-        #recommendation view
+        self.view2_user_embeddings, self.view2_item_embeddings = tf.split(all_view2_embeddings,
+                                                                          [self.data.user_num, self.data.item_num], 0)
+        # recommendation view
         for k in range(self.n_layers):
-            ego_embeddings = tf.sparse_tensor_dense_matmul(self.norm_adj,ego_embeddings)
+            ego_embeddings = tf.sparse_tensor_dense_matmul(self.norm_adj, ego_embeddings)
             all_embeddings += [ego_embeddings]
         all_embeddings = tf.stack(all_embeddings, 1)
         all_embeddings = tf.reduce_mean(all_embeddings, axis=1, keepdims=False)
-        self.main_user_embeddings, self.main_item_embeddings = tf.split(all_embeddings, [self.data.user_num, self.data.item_num], 0)
+        self.main_user_embeddings, self.main_item_embeddings = tf.split(all_embeddings,
+                                                                        [self.data.user_num, self.data.item_num], 0)
         self.neg_idx = tf.placeholder(tf.int32, name="neg_holder")
         self.batch_neg_item_emb = tf.nn.embedding_lookup(self.main_item_embeddings, self.neg_idx)
         self.batch_user_emb = tf.nn.embedding_lookup(self.main_user_embeddings, self.u_idx)
@@ -106,16 +116,18 @@ class SGL(GraphRecommender):
         emb_merge2 = tf.concat([user_emb2, item_emb2], axis=0)
         normalize_emb_merge1 = tf.nn.l2_normalize(emb_merge1, 1)
         normalize_emb_merge2 = tf.nn.l2_normalize(emb_merge2, 1)
-        ssl_loss = self.ssl_reg * infoNCE(normalize_emb_merge1,normalize_emb_merge2,0.2)
+        ssl_loss = self.ssl_reg * infoNCE(normalize_emb_merge1, normalize_emb_merge2, 0.2)
         return ssl_loss
 
     def train(self):
-        #main task: recommendation
-        rec_loss = bpr_loss(self.batch_user_emb,self.batch_pos_item_emb,self.batch_neg_item_emb)
-        rec_loss +=  self.reg * (tf.nn.l2_loss(self.batch_user_emb) + tf.nn.l2_loss(self.batch_pos_item_emb) + tf.nn.l2_loss(self.batch_neg_item_emb))
-        #SSL task: contrastive learning
+        # main task: recommendation
+        rec_loss = bpr_loss(self.batch_user_emb, self.batch_pos_item_emb, self.batch_neg_item_emb)
+        rec_loss += self.reg * (
+                    tf.nn.l2_loss(self.batch_user_emb) + tf.nn.l2_loss(self.batch_pos_item_emb) + tf.nn.l2_loss(
+                self.batch_neg_item_emb))
+        # SSL task: contrastive learning
         ssl_loss = self.calc_ssl_loss()
-        total_loss = rec_loss+ssl_loss
+        total_loss = rec_loss + ssl_loss
 
         opt = tf.train.AdamOptimizer(self.lRate)
         train = opt.minimize(total_loss)
@@ -125,7 +137,7 @@ class SGL(GraphRecommender):
         for epoch in range(self.maxEpoch):
             sub_mat = {}
             if self.aug_type == 0:
-                dropped_mat1 = GraphAugmentor.node_dropout(self.data.interaction_mat,self.drop_rate)
+                dropped_mat1 = GraphAugmentor.node_dropout(self.data.interaction_mat, self.drop_rate)
                 adj_mat1 = self.data.convert_interaction_to_laplacian_mat(dropped_mat1)
                 sub_mat['adj_indices_sub1'], sub_mat['adj_values_sub1'], sub_mat[
                     'adj_shape_sub1'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat1)
@@ -136,7 +148,7 @@ class SGL(GraphRecommender):
                     'adj_shape_sub2'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat2)
 
             elif self.aug_type == 1:
-                dropped_mat1 = GraphAugmentor.edge_dropout(self.data.interaction_mat,self.drop_rate)
+                dropped_mat1 = GraphAugmentor.edge_dropout(self.data.interaction_mat, self.drop_rate)
                 adj_mat1 = self.data.convert_interaction_to_laplacian_mat(dropped_mat1)
                 sub_mat['adj_indices_sub1'], sub_mat['adj_values_sub1'], sub_mat[
                     'adj_shape_sub1'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat1)
@@ -156,7 +168,7 @@ class SGL(GraphRecommender):
                     sub_mat['adj_indices_sub2%d' % k], sub_mat['adj_values_sub2%d' % k], sub_mat[
                         'adj_shape_sub2%d' % k] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat2)
 
-            for n, batch in enumerate(next_batch_pairwise(self.data,self.batch_size)):
+            for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size)):
                 user_idx, i_idx, j_idx = batch
                 feed_dict = {self.u_idx: user_idx,
                              self.v_idx: i_idx,
@@ -181,8 +193,8 @@ class SGL(GraphRecommender):
                             self.sub_mat['adj_shape_sub2%d' % k]: sub_mat['adj_shape_sub2%d' % k]
                         })
 
-                _, l,rec_l,ssl_l = self.sess.run([train, total_loss, rec_loss, ssl_loss],feed_dict=feed_dict)
-                print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_l, 'ssl_loss',ssl_l)
+                _, l, rec_l, ssl_l = self.sess.run([train, total_loss, rec_loss, ssl_loss], feed_dict=feed_dict)
+                print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_l, 'ssl_loss', ssl_l)
             self.U, self.V = self.sess.run([self.main_user_embeddings, self.main_item_embeddings])
             self.training_evaluation(epoch)
         self.U, self.V = self.best_user_emb, self.best_item_emb

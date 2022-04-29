@@ -11,7 +11,7 @@ if __name__ == '__main__':
     print('   SELFRec: A library for self-supervised recommendation.   ')
     print('='*80)
 
-    print('Graph-based Models:')
+    print('Graph-Based Models:')
     print('   '.join(graph_models))
 
     print('='*80)

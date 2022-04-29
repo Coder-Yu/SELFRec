@@ -7,6 +7,8 @@ from base.tf_interface import TFGraphInterface
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
+# Paper: Are graph augmentations necessary? simple graph contrastive learning for recommendation. SIGIR'22
+
 
 class SimGCL(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
