@@ -19,7 +19,7 @@ class Interaction(Data):
         self.user_num = len(self.training_set_u)
         self.item_num = len(self.training_set_i)
         self.ui_adj = self.__create_sparse_bipartite_adjacency()
-        self.norm_adj = self.__normalize_adjcency_matrix(self.ui_adj)
+        self.norm_adj = self.normalize_adj_mat(self.ui_adj)
         self.interaction_mat = self.__create_sparse_interaction_matrix()
 
     def __generate_set(self):
@@ -53,15 +53,31 @@ class Interaction(Data):
         adj_mat = tmp_adj + tmp_adj.T
         return adj_mat
 
-    def __normalize_adjcency_matrix(self, adj_mat):
+    def normalize_adj_mat(self, adj_mat):
         # pre adjcency matrix
+        shape = adj_mat.get_shape()
         rowsum = np.array(adj_mat.sum(1))
-        d_inv = np.power(rowsum, -0.5).flatten()
-        d_inv[np.isinf(d_inv)] = 0.
-        d_mat_inv = sp.diags(d_inv)
-        norm_adj_tmp = d_mat_inv.dot(adj_mat)
-        norm_adj_mat = norm_adj_tmp.dot(d_mat_inv)
+        if shape[0] == shape[1]:
+            d_inv = np.power(rowsum, -0.5).flatten()
+            d_inv[np.isinf(d_inv)] = 0.
+            d_mat_inv = sp.diags(d_inv)
+            norm_adj_tmp = d_mat_inv.dot(adj_mat)
+            norm_adj_mat = norm_adj_tmp.dot(d_mat_inv)
+        else:
+            d_inv = np.power(rowsum, -1).flatten()
+            d_inv[np.isinf(d_inv)] = 0.
+            d_mat_inv = sp.diags(d_inv)
+            norm_adj_mat = d_mat_inv.dot(adj_mat)
         return norm_adj_mat
+
+    def convert_interaction_to_laplacian_mat(self, adj_mat):
+        adj_shape = adj_mat.get_shape()
+        n_nodes = adj_shape[0]+adj_shape[1]
+        (user_np_keep, item_np_keep) = adj_mat.nonzero()
+        ratings_keep = adj_mat.data
+        tmp_adj = sp.csr_matrix((ratings_keep, (user_np_keep, item_np_keep + adj_shape[0])),shape=(n_nodes, n_nodes))
+        tmp_adj = tmp_adj + tmp_adj.T
+        return self.normalize_adj_mat(tmp_adj)
 
     def __create_sparse_interaction_matrix(self):
         '''
@@ -72,7 +88,7 @@ class Interaction(Data):
             row += [self.user[pair[0]]]
             col += [self.item[pair[1]]]
             entries += [1.0/len(self.training_set_u[pair[0]])]
-        interaction_mat = sp.coo_matrix((entries, (row, col)), shape=(self.user_num,self.item_num),dtype=np.float32)
+        interaction_mat = sp.csr_matrix((entries, (row, col)), shape=(self.user_num,self.item_num),dtype=np.float32)
         return interaction_mat
 
     def get_user_id(self, u):

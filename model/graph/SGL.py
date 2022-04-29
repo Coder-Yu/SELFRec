@@ -1,4 +1,5 @@
 from base.graph_recommender import GraphRecommender
+from data.augmentor import GraphAugmentor
 import tensorflow as tf
 from base.tf_interface import TFGraphInterface
 from util.loss import bpr_loss,infoNCE
@@ -21,6 +22,26 @@ class SGL(GraphRecommender):
         self.ssl_temp = float(args['-temp'])
         self.n_layers = int(args['-n_layer'])
 
+    def _create_variable(self):
+        self.sub_mat = {}
+        if self.aug_type in [0, 1]:
+            self.sub_mat['adj_values_sub1'] = tf.placeholder(tf.float32)
+            self.sub_mat['adj_indices_sub1'] = tf.placeholder(tf.int64)
+            self.sub_mat['adj_shape_sub1'] = tf.placeholder(tf.int64)
+
+            self.sub_mat['adj_values_sub2'] = tf.placeholder(tf.float32)
+            self.sub_mat['adj_indices_sub2'] = tf.placeholder(tf.int64)
+            self.sub_mat['adj_shape_sub2'] = tf.placeholder(tf.int64)
+        else:
+            for k in range(self.n_layers):
+                self.sub_mat['adj_values_sub1%d' % k] = tf.placeholder(tf.float32, name='adj_values_sub1%d' % k)
+                self.sub_mat['adj_indices_sub1%d' % k] = tf.placeholder(tf.int64, name='adj_indices_sub1%d' % k)
+                self.sub_mat['adj_shape_sub1%d' % k] = tf.placeholder(tf.int64, name='adj_shape_sub1%d' % k)
+
+                self.sub_mat['adj_values_sub2%d' % k] = tf.placeholder(tf.float32, name='adj_values_sub2%d' % k)
+                self.sub_mat['adj_indices_sub2%d' % k] = tf.placeholder(tf.int64, name='adj_indices_sub2%d' % k)
+                self.sub_mat['adj_shape_sub2%d' % k] = tf.placeholder(tf.int64, name='adj_shape_sub2%d' % k)
+
     def build(self):
         super(SGL, self).build()
         initializer = tf.contrib.layers.xavier_initializer()
@@ -40,23 +61,11 @@ class SGL(GraphRecommender):
         self._create_variable()
         for k in range(0, self.n_layers):
             if self.aug_type in [0, 1]:
-                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(
-                    self.sub_mat['adj_indices_sub1'],
-                    self.sub_mat['adj_values_sub1'],
-                    self.sub_mat['adj_shape_sub1'])
-                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(
-                    self.sub_mat['adj_indices_sub2'],
-                    self.sub_mat['adj_values_sub2'],
-                    self.sub_mat['adj_shape_sub2'])
+                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub1'], self.sub_mat['adj_values_sub1'], self.sub_mat['adj_shape_sub1'])
+                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub2'], self.sub_mat['adj_values_sub2'], self.sub_mat['adj_shape_sub2'])
             else:
-                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(
-                    self.sub_mat['adj_indices_sub1%d' % k],
-                    self.sub_mat['adj_values_sub1%d' % k],
-                    self.sub_mat['adj_shape_sub1%d' % k])
-                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(
-                    self.sub_mat['adj_indices_sub2%d' % k],
-                    self.sub_mat['adj_values_sub2%d' % k],
-                    self.sub_mat['adj_shape_sub2%d' % k])
+                self.sub_mat['sub_mat_1%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub1%d' % k], self.sub_mat['adj_values_sub1%d' % k], self.sub_mat['adj_shape_sub1%d' % k])
+                self.sub_mat['sub_mat_2%d' % k] = tf.SparseTensor(self.sub_mat['adj_indices_sub2%d' % k], self.sub_mat['adj_values_sub2%d' % k], self.sub_mat['adj_shape_sub2%d' % k])
 
         #view1 - view
         for k in range(self.n_layers):
@@ -88,69 +97,6 @@ class SGL(GraphRecommender):
         tf_config.gpu_options.allow_growth = True
         self.sess = tf.Session(config=tf_config)
 
-    def _create_variable(self):
-        self.sub_mat = {}
-        if self.aug_type in [0, 1]:
-            self.sub_mat['adj_values_sub1'] = tf.placeholder(tf.float32)
-            self.sub_mat['adj_indices_sub1'] = tf.placeholder(tf.int64)
-            self.sub_mat['adj_shape_sub1'] = tf.placeholder(tf.int64)
-
-            self.sub_mat['adj_values_sub2'] = tf.placeholder(tf.float32)
-            self.sub_mat['adj_indices_sub2'] = tf.placeholder(tf.int64)
-            self.sub_mat['adj_shape_sub2'] = tf.placeholder(tf.int64)
-        else:
-            for k in range(self.n_layers):
-                self.sub_mat['adj_values_sub1%d' % k] = tf.placeholder(tf.float32, name='adj_values_sub1%d' % k)
-                self.sub_mat['adj_indices_sub1%d' % k] = tf.placeholder(tf.int64, name='adj_indices_sub1%d' % k)
-                self.sub_mat['adj_shape_sub1%d' % k] = tf.placeholder(tf.int64, name='adj_shape_sub1%d' % k)
-
-                self.sub_mat['adj_values_sub2%d' % k] = tf.placeholder(tf.float32, name='adj_values_sub2%d' % k)
-                self.sub_mat['adj_indices_sub2%d' % k] = tf.placeholder(tf.int64, name='adj_indices_sub2%d' % k)
-                self.sub_mat['adj_shape_sub2%d' % k] = tf.placeholder(tf.int64, name='adj_shape_sub2%d' % k)
-
-    def _create_adj_mat(self, is_subgraph=False, aug_type=0):
-        n_nodes = self.data.user_num + self.data.item_num
-        row_idx = [self.data.user[pair[0]] for pair in self.data.training_data]
-        col_idx = [self.data.item[pair[1]] for pair in self.data.training_data]
-        if is_subgraph and aug_type in [0, 1, 2] and self.drop_rate > 0:
-            # data augmentation type --- 0: Node Dropout; 1: Edge Dropout; 2: Random Walk
-            if aug_type == 0:
-                drop_user_idx = random.sample(list(range(self.data.user_num)), int(self.data.user_num * self.drop_rate))
-                drop_item_idx = random.sample(list(range(self.data.item_num)), int(self.data.item_num * self.drop_rate))
-                indicator_user = np.ones(self.data.user_num, dtype=np.float32)
-                indicator_item = np.ones(self.data.item_num, dtype=np.float32)
-                indicator_user[drop_user_idx] = 0.
-                indicator_item[drop_item_idx] = 0.
-                diag_indicator_user = sp.diags(indicator_user)
-                diag_indicator_item = sp.diags(indicator_item)
-                R = sp.csr_matrix(
-                    (np.ones_like(row_idx, dtype=np.float32), (row_idx, col_idx)),
-                    shape=(self.data.user_num, self.data.item_num))
-                R_prime = diag_indicator_user.dot(R).dot(diag_indicator_item)
-                (user_np_keep, item_np_keep) = R_prime.nonzero()
-                ratings_keep = R_prime.data
-                tmp_adj = sp.csr_matrix((ratings_keep, (user_np_keep, item_np_keep+self.data.user_num)), shape=(n_nodes, n_nodes))
-            if aug_type in [1, 2]:
-                keep_idx = random.sample(list(range(self.data.training_size()[-1])), int(self.data.training_size()[-1] * (1 - self.drop_rate)))
-                user_np = np.array(row_idx)[keep_idx]
-                item_np = np.array(col_idx)[keep_idx]
-                ratings = np.ones_like(user_np, dtype=np.float32)
-                tmp_adj = sp.csr_matrix((ratings, (user_np, item_np+self.data.user_num)), shape=(n_nodes, n_nodes))
-        else:
-            user_np = np.array(row_idx)
-            item_np = np.array(col_idx)
-            ratings = np.ones_like(user_np, dtype=np.float32)
-            tmp_adj = sp.csr_matrix((ratings, (user_np, item_np+self.data.user_num)), shape=(n_nodes, n_nodes))
-        adj_mat = tmp_adj + tmp_adj.T
-        # pre adjcency matrix
-        rowsum = np.array(adj_mat.sum(1))
-        d_inv = np.power(rowsum, -0.5).flatten()
-        d_inv[np.isinf(d_inv)] = 0.
-        d_mat_inv = sp.diags(d_inv)
-        norm_adj_tmp = d_mat_inv.dot(adj_mat)
-        adj_matrix = norm_adj_tmp.dot(d_mat_inv)
-        return adj_matrix
-
     def calc_ssl_loss(self):
         user_emb1 = tf.nn.embedding_lookup(self.view1_user_embeddings, tf.unique(self.u_idx)[0])
         user_emb2 = tf.nn.embedding_lookup(self.view2_user_embeddings, tf.unique(self.u_idx)[0])
@@ -176,25 +122,39 @@ class SGL(GraphRecommender):
 
         init = tf.global_variables_initializer()
         self.sess.run(init)
-        import time
         for epoch in range(self.maxEpoch):
             sub_mat = {}
-            if self.aug_type in [0, 1]:
+            if self.aug_type == 0:
+                dropped_mat1 = GraphAugmentor.node_dropout(self.data.interaction_mat,self.drop_rate)
+                adj_mat1 = self.data.convert_interaction_to_laplacian_mat(dropped_mat1)
                 sub_mat['adj_indices_sub1'], sub_mat['adj_values_sub1'], sub_mat[
-                    'adj_shape_sub1'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(
-                    self._create_adj_mat(is_subgraph=True, aug_type=self.aug_type))
+                    'adj_shape_sub1'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat1)
 
+                dropped_mat2 = GraphAugmentor.node_dropout(self.data.interaction_mat, self.drop_rate)
+                adj_mat2 = self.data.convert_interaction_to_laplacian_mat(dropped_mat2)
                 sub_mat['adj_indices_sub2'], sub_mat['adj_values_sub2'], sub_mat[
-                    'adj_shape_sub2'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(
-                    self._create_adj_mat(is_subgraph=True, aug_type=self.aug_type))
+                    'adj_shape_sub2'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat2)
+
+            elif self.aug_type == 1:
+                dropped_mat1 = GraphAugmentor.edge_dropout(self.data.interaction_mat,self.drop_rate)
+                adj_mat1 = self.data.convert_interaction_to_laplacian_mat(dropped_mat1)
+                sub_mat['adj_indices_sub1'], sub_mat['adj_values_sub1'], sub_mat[
+                    'adj_shape_sub1'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat1)
+
+                dropped_mat2 = GraphAugmentor.edge_dropout(self.data.interaction_mat, self.drop_rate)
+                adj_mat2 = self.data.convert_interaction_to_laplacian_mat(dropped_mat2)
+                sub_mat['adj_indices_sub2'], sub_mat['adj_values_sub2'], sub_mat[
+                    'adj_shape_sub2'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat2)
             else:
                 for k in range(self.n_layers):
+                    dropped_mat1 = GraphAugmentor.edge_dropout(self.data.interaction_mat, self.drop_rate)
+                    adj_mat1 = self.data.convert_interaction_to_laplacian_mat(dropped_mat1)
                     sub_mat['adj_indices_sub1%d' % k], sub_mat['adj_values_sub1%d' % k], sub_mat[
-                        'adj_shape_sub1%d' % k] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(
-                        self._create_adj_mat(is_subgraph=True, aug_type=self.aug_type))
+                        'adj_shape_sub1%d' % k] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat1)
+                    dropped_mat2 = GraphAugmentor.edge_dropout(self.data.interaction_mat, self.drop_rate)
+                    adj_mat2 = self.data.convert_interaction_to_laplacian_mat(dropped_mat2)
                     sub_mat['adj_indices_sub2%d' % k], sub_mat['adj_values_sub2%d' % k], sub_mat[
-                        'adj_shape_sub2%d' % k] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(
-                        self._create_adj_mat(is_subgraph=True, aug_type=self.aug_type))
+                        'adj_shape_sub2%d' % k] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat2)
 
             for n, batch in enumerate(next_batch_pairwise(self.data,self.batch_size)):
                 user_idx, i_idx, j_idx = batch
