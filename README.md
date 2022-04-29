@@ -7,12 +7,10 @@
 **Founder and principal contributor**: [@Coder-Yu ](https://github.com/Coder-Yu) [@xiaxin1998](https://github.com/xiaxin1998) <br>
 **Supported by**: [@AIhongzhi](https://github.com/AIhongzhi) (<a href="https://sites.google.com/view/hongzhi-yin/home">A/Prof. Hongzhi Yin</a>, UQ)
 
- ```diff
-- We are in a hurry to test and release more model implementations. 
-```
+### More models will be released soon...
   
 <h2>Architecture<h2>
-<img src="https://raw.githubusercontent.com/Coder-Yu/SELFRec/main/selfrec.jpg" alt="ssl-logo" width="633" height="375" border="0">
+<img src="https://raw.githubusercontent.com/Coder-Yu/SELFRec/main/selfrec.jpg" alt="ssl-logo" border="0">
 
 
 <h2>Features</h2>
