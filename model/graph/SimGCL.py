@@ -35,8 +35,8 @@ class SimGCL(GraphRecommender):
         all_embs = tf.reduce_mean(all_embs, axis=0)
         return tf.split(all_embs, [self.data.user_num, self.data.item_num], 0)
 
-    def init(self):
-        super(SimGCL, self).init()
+    def build(self):
+        super(SimGCL, self).build()
         initializer = tf.contrib.layers.xavier_initializer()
         self.user_embeddings = tf.Variable(initializer([self.data.user_num, self.emb_size]))
         self.item_embeddings = tf.Variable(initializer([self.data.item_num, self.emb_size]))
@@ -45,7 +45,7 @@ class SimGCL(GraphRecommender):
         self.neg_idx = tf.placeholder(tf.int32, name="neg_holder")
         ego_embeddings = tf.concat([self.user_embeddings,self.item_embeddings], axis=0)
         #adjaceny matrix
-        self.norm_adj = TFGraphInterface.create_joint_sparse_adj_tensor(self.data.norm_adj)
+        self.norm_adj = TFGraphInterface.convert_sparse_mat_to_tensor(self.data.norm_adj)
         #encoding
         self.main_user_embeddings, self.main_item_embeddings = self.LightGCN_encoder(ego_embeddings,self.norm_adj,self.n_layers)
         self.perturbed_user_embeddings1, self.perturbed_item_embeddings1 = self.perturbed_LightGCN_encoder(ego_embeddings,self.norm_adj, self.n_layers)

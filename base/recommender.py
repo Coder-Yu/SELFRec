@@ -46,7 +46,7 @@ class Recommender(object):
         print('Maximum Epoch:', self.maxEpoch)
         print('Regularization parameter: reg %.4f' % self.reg)
 
-    def init(self):
+    def build(self):
         pass
 
     def train(self):
@@ -76,12 +76,12 @@ class Recommender(object):
     def execute(self):
         self.initializing_log()
         self.print_model_info()
-        print('Initializing model...')
-        self.init()
+        print('Initializing and building model...')
+        self.build()
         print('Training Model...')
         self.train()
-        # rating prediction or item ranking
         print('Testing...')
         rec_list = self.test()
+        print('Evaluating...')
         self.evaluate(rec_list)
 

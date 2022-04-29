@@ -25,7 +25,7 @@ class GraphRecommender(Recommender):
         print('Test set size: (user count: %d, item count %d, record count: %d)' % (self.data.test_size()))
         print('=' * 80)
 
-    def init(self):
+    def build(self):
         pass
 
     def train(self):
@@ -101,7 +101,7 @@ class GraphRecommender(Recommender):
                 self.bestPerformance.append(performance)
             self.save()
         print('-' * 120)
-        print('Quick Ranking Performance ' + ' (Top-' + str(self.max_N) + 'Item Recommendation)')
+        print('Quick Ranking Performance ' + ' (Top-' + str(self.max_N) + ' Item Recommendation)')
         measure = [m.strip() for m in measure[1:]]
         print('*Current Performance*')
         print('Epoch:', str(epoch + 1) + ',', ' | '.join(measure))
