@@ -23,20 +23,28 @@ class SEPT(GraphRecommender):
         self.ss_rate = float(args['-ss_rate'])
         self.drop_rate = float(args['-drop_rate'])
         self.instance_cnt = int(args['-ins_cnt'])
-        self.social_data = Relation(conf,kwargs['social.data'],self.data.user)
+        self.social_data = Relation(conf, kwargs['social.data'], self.data.user)
+
+    def print_model_info(self):
+        super(SEPT, self).print_model_info()
+        # # print social relation statistics
+        print('Social data size: (user number: %d, relation number: %d).' % (self.social_data.size()))
+        print('=' * 80)
 
     def get_social_related_views(self, social_mat, interaction_mat):
         social_matrix = social_mat.dot(social_mat)
-        social_matrix = social_matrix.multiply(social_mat) + eye(self.data.user_num,dtype=np.float32)
+        social_matrix = social_matrix.multiply(social_mat) + eye(self.data.user_num, dtype=np.float32)
         sharing_matrix = interaction_mat.dot(interaction_mat.T)
-        sharing_matrix = sharing_matrix.multiply(social_mat) + eye(self.data.user_num,dtype=np.float32)
+        sharing_matrix = sharing_matrix.multiply(social_mat) + eye(self.data.user_num, dtype=np.float32)
         social_matrix = self.social_data.normalize_graph_mat(social_matrix)
         sharing_matrix = self.social_data.normalize_graph_mat(sharing_matrix)
         return [social_matrix, sharing_matrix]
 
     def _create_variable(self):
-        self.sub_mat = {'adj_values_sub': tf.placeholder(tf.float32), 'adj_indices_sub': tf.placeholder(tf.int64), 'adj_shape_sub': tf.placeholder(tf.int64)}
-        self.sub_mat['sub_mat'] = tf.SparseTensor(self.sub_mat['adj_indices_sub'], self.sub_mat['adj_values_sub'], self.sub_mat['adj_shape_sub'])
+        self.sub_mat = {'adj_values_sub': tf.placeholder(tf.float32), 'adj_indices_sub': tf.placeholder(tf.int64),
+                        'adj_shape_sub': tf.placeholder(tf.int64)}
+        self.sub_mat['sub_mat'] = tf.SparseTensor(self.sub_mat['adj_indices_sub'], self.sub_mat['adj_values_sub'],
+                                                  self.sub_mat['adj_shape_sub'])
 
     def encoder(self, emb, adj, n_layers):
         all_embs = [emb]
@@ -58,9 +66,11 @@ class SEPT(GraphRecommender):
 
     def build(self):
         super(SEPT, self).build()
-        #initializer = tf.contrib.layers.xavier_initializer()
-        self.user_embeddings = tf.Variable(tf.truncated_normal(shape=[self.data.user_num, self.emb_size], stddev=0.005), name='U') / 2
-        self.item_embeddings = tf.Variable(tf.truncated_normal(shape=[self.data.item_num, self.emb_size], stddev=0.005), name='V') / 2
+        # initializer = tf.contrib.layers.xavier_initializer()
+        self.user_embeddings = tf.Variable(tf.truncated_normal(shape=[self.data.user_num, self.emb_size], stddev=0.005),
+                                           name='U') / 2
+        self.item_embeddings = tf.Variable(tf.truncated_normal(shape=[self.data.item_num, self.emb_size], stddev=0.005),
+                                           name='V') / 2
         self.u_idx = tf.placeholder(tf.int32, name="u_idx")
         self.v_idx = tf.placeholder(tf.int32, name="v_idx")
         self.neg_idx = tf.placeholder(tf.int32, name="neg_holder")
@@ -75,7 +85,8 @@ class SEPT(GraphRecommender):
 
         # averaging the view-specific embeddings
         self.rec_user_embeddings, self.rec_item_embeddings = self.encoder(ego_embeddings, self.norm_adj, self.n_layers)
-        self.aug_user_embeddings, self.aug_item_embeddings = self.encoder(ego_embeddings, self.sub_mat['sub_mat'], self.n_layers)
+        self.aug_user_embeddings, self.aug_item_embeddings = self.encoder(ego_embeddings, self.sub_mat['sub_mat'],
+                                                                          self.n_layers)
         self.sharing_view_embeddings = self.social_encoder(self.user_embeddings, sharing_mat, self.n_layers)
         self.friend_view_embeddings = self.social_encoder(self.user_embeddings, social_mat, self.n_layers)
 
@@ -159,7 +170,7 @@ class SEPT(GraphRecommender):
                 sub_mat['adj_indices_sub'], sub_mat['adj_values_sub'], sub_mat[
                     'adj_shape_sub'] = TFGraphInterface.convert_sparse_mat_to_tensor_inputs(adj_mat1)
 
-                for n, batch in enumerate(next_batch_pairwise(self.data,self.batch_size)):
+                for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size)):
                     user_idx, i_idx, j_idx = batch
                     feed_dict = {self.u_idx: user_idx,
                                  self.v_idx: i_idx,
@@ -173,7 +184,7 @@ class SEPT(GraphRecommender):
                     print('training:', epoch + 1, 'batch', n, 'rec loss:', l1, 'con_loss:', self.ss_rate * l3)
             else:
                 # initialization with only recommendation task
-                for n, batch in enumerate(next_batch_pairwise(self.data,self.batch_size)):
+                for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size)):
                     user_idx, i_idx, j_idx = batch
                     feed_dict = {self.u_idx: user_idx, self.v_idx: i_idx, self.neg_idx: j_idx}
                     _, l1 = self.sess.run([v1_op, rec_loss], feed_dict=feed_dict)

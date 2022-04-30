@@ -1,4 +1,3 @@
-from util.structure import SparseMatrix
 from collections import defaultdict
 from data.graph import Graph
 import numpy as np
@@ -18,7 +17,7 @@ class Relation(Graph):
 
     def __initialize(self):
         idx = []
-        for n,pair in enumerate(self.relation):
+        for n, pair in enumerate(self.relation):
             if pair[0] not in self.user or pair[1] not in self.user:
                 idx.append(n)
         for item in reversed(idx):
@@ -35,7 +34,7 @@ class Relation(Graph):
             row += [self.user[pair[0]]]
             col += [self.user[pair[1]]]
             entries += [1.0]
-        social_mat = sp.csr_matrix((entries, (row, col)), shape=(len(self.user),len(self.user)),dtype=np.float32)
+        social_mat = sp.csr_matrix((entries, (row, col)), shape=(len(self.user), len(self.user)), dtype=np.float32)
         return social_mat
 
     def get_birectional_social_mat(self):
@@ -47,7 +46,7 @@ class Relation(Graph):
         adj_shape = adj_mat.get_shape()
         (row_np_keep, col_np_keep) = adj_mat.nonzero()
         ratings_keep = adj_mat.data
-        tmp_adj = sp.csr_matrix((ratings_keep, (row_np_keep, col_np_keep)), shape=adj_shape,dtype=np.float32)
+        tmp_adj = sp.csr_matrix((ratings_keep, (row_np_keep, col_np_keep)), shape=adj_shape, dtype=np.float32)
         return self.normalize_graph_mat(tmp_adj)
 
     def weight(self, u1, u2):
@@ -83,3 +82,6 @@ class Relation(Graph):
             else:
                 return False
         return False
+
+    def size(self):
+        return len(self.followers), len(self.relation)

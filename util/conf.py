@@ -8,7 +8,7 @@ class ModelConf(object):
 
     def __getitem__(self, item):
         if not self.contain(item):
-            print('parameter '+item+' is invalid!')
+            print('parameter '+item+' is not found in the configuration file!')
             exit(-1)
         return self.config[item]
 

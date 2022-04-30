@@ -6,7 +6,8 @@ class Graph(object):
     def __init__(self):
         pass
 
-    def normalize_graph_mat(self, adj_mat):
+    @staticmethod
+    def normalize_graph_mat(adj_mat):
         shape = adj_mat.get_shape()
         rowsum = np.array(adj_mat.sum(1))
         if shape[0] == shape[1]:
