@@ -28,8 +28,8 @@ class FileIO(object):
                     items = split(' ', line.strip())
                     user_id = items[0]
                     item_id = items[1]
-                    rating = items[2]
-                    data.append([user_id, item_id, float(rating)])
+                    weight = items[2]
+                    data.append([user_id, item_id, float(weight)])
 
         # if dtype == 'sequential':
         #     with open(file) as f:

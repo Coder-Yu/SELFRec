@@ -8,7 +8,7 @@ from util.algorithm import find_k_largest
 
 
 class Recommender(object):
-    def __init__(self, conf, training_set, test_set):
+    def __init__(self, conf, training_set, test_set, **kwargs):
         self.config = conf
         self.data = Data(self.config, training_set, test_set)
         self.model_name = self.config['model.name']
@@ -24,14 +24,11 @@ class Recommender(object):
         self.recOutput = []
 
     def initializing_log(self):
-        # save configuration
         self.model_log.add('### model configuration ###')
         for k in self.config.config:
             self.model_log.add(k + '=' + self.config[k])
 
     def print_model_info(self):
-        "show model's configuration"
-        # print specific parameters if applicable
         if self.config.contain(self.config['model.name']):
             par_str = ''
             args = OptionConf(self.config[self.config['model.name']])
@@ -50,7 +47,6 @@ class Recommender(object):
         pass
 
     def train(self):
-        'build the model (for model-based Models )'
         pass
 
     def predict(self, u):
@@ -67,11 +63,6 @@ class Recommender(object):
 
     def evaluate(self,rec_list):
         pass
-    # # for rating prediction
-    # def predictForRating(self, u, i):
-    #     pass
-
-    # for item prediction
 
     def execute(self):
         self.initializing_log()

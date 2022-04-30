@@ -9,8 +9,8 @@ from util.evaluation import ranking_evaluation
 
 
 class GraphRecommender(Recommender):
-    def __init__(self, conf, training_set, test_set):
-        super(GraphRecommender, self).__init__(conf, training_set, test_set)
+    def __init__(self, conf, training_set, test_set, **kwargs):
+        super(GraphRecommender, self).__init__(conf, training_set, test_set, **kwargs)
         self.data = Interaction(conf, training_set, test_set)
         self.batch_size = int(self.config['batch_size'])
         self.bestPerformance = []
@@ -48,7 +48,7 @@ class GraphRecommender(Recommender):
             item_names = [self.data.id2item[iid] for iid in ids]
             rec_list[user] = list(zip(item_names, scores))
             if i % 1000 == 0:
-                print(self.model_name, 'progress:' + str(i) + '/' + str(user_count))
+                print('Testing '+ self.model_name, 'progress:' + str(i) + '/' + str(user_count))
         return rec_list
 
     def evaluate(self, rec_list):
@@ -75,6 +75,7 @@ class GraphRecommender(Recommender):
         print('The result of %s:\n%s' % (self.model_name, ''.join(self.result)))
 
     def training_evaluation(self, epoch):
+        print('evaluating the model...')
         rec_list = self.test()
         measure = ranking_evaluation(self.data.test_set, rec_list, [self.max_N])
         if len(self.bestPerformance) > 0:
