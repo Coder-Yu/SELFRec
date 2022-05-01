@@ -52,7 +52,7 @@ class MHCN(GraphRecommender):
         H_j = sum([A8,A9])
         H_j = H_j.multiply(1.0/H_j.sum(axis=1).reshape(-1, 1))
         H_p = A10
-        H_p = H_p.multiply(H_p>2)
+        H_p = H_p.multiply(H_p>3)
         H_p = H_p.multiply(1.0/H_p.sum(axis=1).reshape(-1, 1))
         return [H_s, H_j, H_p]
 

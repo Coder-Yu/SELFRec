@@ -66,11 +66,9 @@ class SEPT(GraphRecommender):
 
     def build(self):
         super(SEPT, self).build()
-        # initializer = tf.contrib.layers.xavier_initializer()
-        self.user_embeddings = tf.Variable(tf.truncated_normal(shape=[self.data.user_num, self.emb_size], stddev=0.005),
-                                           name='U') / 2
-        self.item_embeddings = tf.Variable(tf.truncated_normal(shape=[self.data.item_num, self.emb_size], stddev=0.005),
-                                           name='V') / 2
+        initializer = tf.contrib.layers.xavier_initializer()
+        self.user_embeddings = tf.Variable(initializer([self.data.user_num, self.emb_size]))
+        self.item_embeddings = tf.Variable(initializer([self.data.item_num, self.emb_size]))
         self.u_idx = tf.placeholder(tf.int32, name="u_idx")
         self.v_idx = tf.placeholder(tf.int32, name="v_idx")
         self.neg_idx = tf.placeholder(tf.int32, name="neg_holder")
