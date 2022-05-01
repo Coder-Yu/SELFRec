@@ -42,6 +42,12 @@ class Recommender(object):
         print('Embedding Dimension:', self.emb_size)
         print('Maximum Epoch:', self.maxEpoch)
         print('Regularization parameter: reg %.4f' % self.reg)
+        parStr = ''
+        args = OptionConf(self.config[self.config['model.name']])
+        for key in args.keys():
+            parStr += key[1:] + ':' + args[key] + '  '
+        print('Specific parameters:', parStr)
+
 
     def build(self):
         pass

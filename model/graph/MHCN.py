@@ -47,13 +47,13 @@ class MHCN(GraphRecommender):
         A9 = A9 + A9.T
         A10 = Y.dot(Y.T) - A8 - A9
         # addition and row-normalization
-        H_s = sum([A1, A2, A3, A4, A5, A6, A7])
-        H_s = Relation.normalize_graph_mat(H_s)
-        H_j = sum([A8, A9])
-        H_j = Relation.normalize_graph_mat(H_j)
+        H_s = sum([A1,A2,A3,A4,A5,A6,A7])
+        H_s = H_s.multiply(1.0/H_s.sum(axis=1).reshape(-1, 1))
+        H_j = sum([A8,A9])
+        H_j = H_j.multiply(1.0/H_j.sum(axis=1).reshape(-1, 1))
         H_p = A10
-        H_p = H_p.multiply(H_p > 2)
-        H_p = Relation.normalize_graph_mat(H_p)
+        H_p = H_p.multiply(H_p>2)
+        H_p = H_p.multiply(1.0/H_p.sum(axis=1).reshape(-1, 1))
         return [H_s, H_j, H_p]
 
     def build(self):
@@ -152,6 +152,7 @@ class MHCN(GraphRecommender):
         self.ss_loss += self.hierarchical_self_supervision(self_supervised_gating(self.final_user_embeddings, 1), H_s)
         self.ss_loss += self.hierarchical_self_supervision(self_supervised_gating(self.final_user_embeddings, 2), H_j)
         self.ss_loss += self.hierarchical_self_supervision(self_supervised_gating(self.final_user_embeddings, 3), H_p)
+        self.ss_loss = self.ss_rate * self.ss_loss
         # embedding look-up
         self.batch_neg_item_emb = tf.nn.embedding_lookup(self.final_item_embeddings, self.neg_idx)
         self.batch_user_emb = tf.nn.embedding_lookup(self.final_user_embeddings, self.u_idx)
@@ -166,8 +167,8 @@ class MHCN(GraphRecommender):
             return corrupted_embedding
         def score(x1, x2):
             return tf.reduce_sum(tf.multiply(x1, x2), 1)
-        #user_embeddings = em
-        user_embeddings = tf.math.l2_normalize(em,1)
+        user_embeddings = em
+        #user_embeddings = tf.math.l2_normalize(em,1)
         edge_embeddings = tf.sparse_tensor_dense_matmul(adj, user_embeddings)
         # Local MIM
         pos = score(user_embeddings, edge_embeddings)
@@ -187,7 +188,7 @@ class MHCN(GraphRecommender):
         for key in self.weights:
             reg_loss += self.reg * tf.nn.l2_loss(self.weights[key])
         reg_loss += self.reg * (tf.nn.l2_loss(self.batch_user_emb) + tf.nn.l2_loss(self.batch_neg_item_emb) + tf.nn.l2_loss(self.batch_pos_item_emb))
-        total_loss = rec_loss + reg_loss + self.ss_rate * self.ss_loss
+        total_loss = rec_loss + reg_loss + self.ss_loss
         opt = tf.train.AdamOptimizer(self.lRate)
         train_op = opt.minimize(total_loss)
         init = tf.global_variables_initializer()
