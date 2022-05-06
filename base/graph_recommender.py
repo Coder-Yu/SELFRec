@@ -20,8 +20,8 @@ class GraphRecommender(Recommender):
     def print_model_info(self):
         super(GraphRecommender, self).print_model_info()
         # # print dataset statistics
-        print('Training set size: (user number: %d, item number %d, interaction number: %d)' % (self.data.training_size()))
-        print('Test set size: (user number: %d, item number %d, interaction number: %d)' % (self.data.test_size()))
+        print('Training Set Size: (user number: %d, item number %d, interaction number: %d)' % (self.data.training_size()))
+        print('Test Set Size: (user number: %d, item number %d, interaction number: %d)' % (self.data.test_size()))
         print('=' * 80)
 
     def build(self):

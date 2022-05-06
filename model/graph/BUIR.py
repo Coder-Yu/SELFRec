@@ -34,7 +34,7 @@ class BUIR(GraphRecommender):
                 optimizer.zero_grad()
                 batch_loss.backward()
                 optimizer.step()
-                model.update_target()
+                model.update_target(user_idx,i_idx)
                 print('training:', epoch + 1, 'batch', n, 'batch_loss:', batch_loss.item())
             model.eval()
             self.p_u_online, self.u_online, self.p_i_online, self.i_online = self.model.get_embedding()
@@ -63,7 +63,6 @@ class BUIR_NB(nn.Module):
         self.online_encoder = LGCN_Encoder(data, emb_size, n_layers, drop_rate, drop_flag)
         self.target_encoder = LGCN_Encoder(data, emb_size, n_layers, drop_rate, drop_flag)
         self.predictor = nn.Linear(emb_size, emb_size)
-
         self._init_target()
 
     def _init_target(self):
@@ -71,9 +70,13 @@ class BUIR_NB(nn.Module):
             param_t.data.copy_(param_o.data)
             param_t.requires_grad = False
 
-    def update_target(self):
-        for param_o, param_t in zip(self.online_encoder.parameters(), self.target_encoder.parameters()):
-            param_t.data = param_t.data * self.momentum + param_o.data * (1. - self.momentum)
+    def update_target(self,u_idx,i_idx):
+        # for param_o, param_t in zip(self.online_encoder.parameters(), self.target_encoder.parameters()):
+        #     param_t.data = param_t.data * self.momentum + param_o.data * (1. - self.momentum)
+        self.target_encoder.embedding_dict['user_emb'].data[u_idx] = self.target_encoder.embedding_dict['user_emb'].data[u_idx]*self.momentum\
+                                                              + self.online_encoder.embedding_dict['user_emb'].data[u_idx]*(1-self.momentum)
+        self.target_encoder.embedding_dict['item_emb'].data[i_idx] = self.target_encoder.embedding_dict['item_emb'].data[i_idx]*self.momentum\
+                                                              + self.online_encoder.embedding_dict['item_emb'].data[i_idx]*(1-self.momentum)
 
     def forward(self, inputs):
         u_online, i_online = self.online_encoder(inputs)
@@ -101,7 +104,7 @@ class LGCN_Encoder(nn.Module):
         super(LGCN_Encoder, self).__init__()
         self.data = data
         self.latent_size = emb_size
-        self.layers = [emb_size] * n_layers
+        self.layers = n_layers
         self.norm_adj = data.norm_adj
         self.drop_ratio = drop_rate
         self.drop_flag = drop_flag
@@ -132,8 +135,7 @@ class LGCN_Encoder(nn.Module):
                                     self.sparse_norm_adj._nnz()) if self.drop_flag else self.sparse_norm_adj
         ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
         all_embeddings = [ego_embeddings]
-
-        for k in range(len(self.layers)):
+        for k in range(self.layers):
             ego_embeddings = torch.sparse.mm(A_hat, ego_embeddings)
             all_embeddings += [ego_embeddings]
         all_embeddings = torch.stack(all_embeddings, dim=1)
@@ -150,7 +152,7 @@ class LGCN_Encoder(nn.Module):
         A_hat = self.sparse_norm_adj
         ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
         all_embeddings = [ego_embeddings]
-        for k in range(len(self.layers)):
+        for k in range(self.layers):
             ego_embeddings = torch.sparse.mm(A_hat, ego_embeddings)
             all_embeddings += [ego_embeddings]
         all_embeddings = torch.stack(all_embeddings, dim=1)

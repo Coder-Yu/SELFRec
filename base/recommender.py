@@ -34,14 +34,15 @@ class Recommender(object):
             args = OptionConf(self.config[self.config['model.name']])
             for key in args.keys():
                 par_str += key[1:] + ':' + args[key] + '  '
-            print('Specific parameters:', par_str)
+            print('Specific Parameters:', par_str)
             print('=' * 80)
         print('Model:', self.config['model.name'])
-        print('Training set:', abspath(self.config['training.set']))
-        print('Test set:', abspath(self.config['test.set']))
+        print('Training Set:', abspath(self.config['training.set']))
+        print('Test Set:', abspath(self.config['test.set']))
         print('Embedding Dimension:', self.emb_size)
         print('Maximum Epoch:', self.maxEpoch)
-        print('Regularization parameter: reg %.4f' % self.reg)
+        print('Learning Rate:', self.lRate)
+        print('Regularization Parameter: reg %.4f' % self.reg)
         parStr = ''
         args = OptionConf(self.config[self.config['model.name']])
         for key in args.keys():
