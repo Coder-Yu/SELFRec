@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import scipy.sparse as sp
-
+import torch
 
 class GraphAugmentor(object):
     def __init__(self):
@@ -36,5 +36,6 @@ class GraphAugmentor(object):
         user_np = np.array(row_idx)[keep_idx]
         item_np = np.array(col_idx)[keep_idx]
         edges = np.ones_like(user_np, dtype=np.float32)
-        dropped_adj = sp.csr_matrix((edges, (user_np, item_np)), shape=(adj_shape[0], adj_shape[1]))
+        dropped_adj = sp.csr_matrix((edges, (user_np, item_np)), shape=adj_shape)
         return dropped_adj
+

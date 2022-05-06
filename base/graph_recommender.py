@@ -1,5 +1,4 @@
 from base.recommender import Recommender
-import numpy as np
 from data.ui_graph import Interaction
 from util.algorithm import find_k_largest
 from time import strftime, localtime, time
