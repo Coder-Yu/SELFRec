@@ -21,4 +21,23 @@
 <li><b>SSR-Specific</b>:  SELFRec is designed for SSR. For the data augmentation and self-supervised tasks, it provides specific modules and interfaces for rapid development.</li>
 </ul>
 
+<h2>Requirements</h2>
+<ul>
+<li>numba==0.53.1</li>
+<li>numpy==1.20.3</li>
+<li>scipy==1.6.2</li>
+<li>tensorflow==1.14.0</li>
+<li>torch==1.7.0</li>
+</ul>
 
+<h2>Reference</h2>
+If you find this repo helpful to your research, please cite our paper.
+```
+@article{yu2022self,
+  title={Self-Supervised Learning for Recommender Systems: A Survey},
+  author={Yu, Junliang and Yin, Hongzhi and Xia, Xin and Chen, Tong and Li, Jundong and Huang, Zi},
+  journal={arXiv preprint arXiv:2203.15876},
+  year={2022}
+}
+
+```
