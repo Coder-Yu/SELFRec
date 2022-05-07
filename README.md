@@ -155,7 +155,8 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
 
 <h2>Reference</h2>
 If you find this repo helpful to your research, please cite our paper.
-  
+<p></p> 
+
 ```
 @article{yu2022self,
   title={Self-Supervised Learning for Recommender Systems: A Survey},
