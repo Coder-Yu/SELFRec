@@ -1,10 +1,25 @@
 import tensorflow as tf
+import torch
 
 
 def bpr_loss(user_emb, pos_item_emb, neg_item_emb):
-    score = tf.reduce_sum(tf.multiply(user_emb, pos_item_emb), 1) - tf.reduce_sum(tf.multiply(user_emb, neg_item_emb),1)
+    score = tf.reduce_sum(tf.multiply(user_emb, pos_item_emb), 1) - tf.reduce_sum(tf.multiply(user_emb, neg_item_emb), 1)
     loss = -tf.reduce_sum(tf.log(tf.sigmoid(score) + 10e-8))
     return loss
+
+
+def bpr_loss_torch(user_emb, pos_item_emb, neg_item_emb):
+    pos_score = torch.mul(user_emb, pos_item_emb).sum(dim=1)
+    neg_score = torch.mul(user_emb, neg_item_emb).sum(dim=1)
+    loss = -torch.log(10e-8 + torch.sigmoid(pos_score - neg_score)).sum()
+    return loss
+
+
+def l2_reg_loss_torch(reg, *args):
+    emb_loss = 0
+    for emb in args:
+        emb_loss += torch.norm(emb, p=2)
+    return emb_loss * reg
 
 
 def infoNCE(view1, view2, temperature):

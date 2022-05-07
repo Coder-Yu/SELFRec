@@ -3,6 +3,7 @@ from util.conf import ModelConf
 
 if __name__ == '__main__':
     #Register your model here
+    baseline = ['LightGCN']
     graph_models = ['SGL','SimGCL','SEPT','MHCN','BUIR','SelfCF']
     sequential_models = []
     dnn_models = []
@@ -11,6 +12,9 @@ if __name__ == '__main__':
     print('   SELFRec: A library for self-supervised recommendation.   ')
     print('='*80)
 
+    print('Baseline Models:')
+    print('   '.join(baseline))
+    print('-'*80)
     print('Graph-Based Models:')
     print('   '.join(graph_models))
 
@@ -18,7 +22,7 @@ if __name__ == '__main__':
     model = input('Please enter the model you want to run:')
     import time
     s = time.time()
-    if model in graph_models or model in sequential_models or model in dnn_models:
+    if model in baseline or model in graph_models or model in sequential_models or model in dnn_models:
         conf = ModelConf('./conf/' + model + '.conf')
     else:
         print('Wrong model name!')
