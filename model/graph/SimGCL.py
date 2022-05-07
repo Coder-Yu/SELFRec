@@ -95,8 +95,6 @@ class SimGCL(GraphRecommender):
         self.U, self.V = self.best_user_emb, self.best_item_emb
 
     def predict(self, u):
-        if self.data.contain_item(u):
-            u = self.data.get_user_id(u)
-            return self.V.dot(self.U[u])
-        else:
-            return [0] * self.data.item_num
+        u = self.data.get_user_id(u)
+        return self.V.dot(self.U[u])
+

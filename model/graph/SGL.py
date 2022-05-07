@@ -197,9 +197,5 @@ class SGL(GraphRecommender):
         self.best_user_emb, self.best_item_emb = self.sess.run([self.main_user_embeddings, self.main_item_embeddings])
 
     def predict(self, u):
-        'rank all the items for the user'
-        if self.data.contain_user(u):
-            u = self.data.get_user_id(u)
-            return self.V.dot(self.U[u])
-        else:
-            return [0] * self.data.item_num
+        u = self.data.get_user_id(u)
+        return self.V.dot(self.U[u])
