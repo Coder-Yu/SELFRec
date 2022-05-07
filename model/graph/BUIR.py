@@ -41,9 +41,6 @@ class BUIR(GraphRecommender):
             self.training_evaluation(epoch)
         self.p_u_online, self.u_online, self.p_i_online, self.i_online = self.best_p_u, self.best_u, self.best_p_i, self.best_i
 
-    def get_embedding(self):
-        return self.model.get_embedding()
-
     def save(self):
         self.best_p_u, self.best_u, self.best_p_i, self.best_i = self.model.get_embedding()
 

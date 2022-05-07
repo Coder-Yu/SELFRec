@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 import torch.nn as nn
 from base.graph_recommender import GraphRecommender
@@ -22,26 +21,25 @@ class LightGCN(GraphRecommender):
         optimizer = torch.optim.Adam(model.parameters(), lr=self.lRate)
         for epoch in range(self.maxEpoch):
             for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size)):
-                user_idx, i_idx, j_idx = batch
-                inputs = {'user': user_idx, 'item': i_idx, 'neg_item': j_idx}
+                user_idx, pos_idx, neg_idx = batch
                 model.train()
-                output = model(inputs)
-                batch_loss = bpr_loss_torch(output[0],output[1],output[2]) + l2_reg_loss_torch(self.reg, *output)
+                rec_user_emb, rec_item_emb = model()
+                user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx, :], rec_item_emb[pos_idx, :], rec_item_emb[neg_idx, :]
+                batch_loss = bpr_loss_torch(user_emb,pos_item_emb,neg_item_emb) + l2_reg_loss_torch(self.reg, *[user_emb,pos_item_emb,neg_item_emb])
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()
                 optimizer.step()
                 print('training:', epoch + 1, 'batch', n, 'batch_loss:', batch_loss.item())
             model.eval()
-            self.user_emb, self.item_emb = self.model.get_embedding()
+            with torch.no_grad():
+                self.user_emb, self.item_emb = self.model()
             self.training_evaluation(epoch)
         self.user_emb, self.item_emb = self.best_user_emb, self.best_item_emb
 
-    def get_embedding(self):
-        return self.model.get_embedding()
-
     def save(self):
-        self.best_user_emb, self.best_item_emb = self.model.get_embedding()
+        with torch.no_grad():
+            self.user_emb, self.item_emb = self.model.forward()
 
     def predict(self, u):
         u = self.data.get_user_id(u)
@@ -67,34 +65,16 @@ class LGCN_Encoder(nn.Module):
         })
         return embedding_dict
 
-    def forward(self, inputs):
-        A_hat =  self.sparse_norm_adj
+    def forward(self):
         ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
         all_embeddings = [ego_embeddings]
         for k in range(self.layers):
-            ego_embeddings = torch.sparse.mm(A_hat, ego_embeddings)
-            all_embeddings += [ego_embeddings]
-        all_embeddings = torch.stack(all_embeddings, dim=1)
-        all_embeddings = torch.mean(all_embeddings, dim=1)
-        user_all_embeddings = all_embeddings[:self.data.user_num, :]
-        item_all_embeddings = all_embeddings[self.data.user_num:, :]
-        users, items, neg_items = inputs['user'], inputs['item'], inputs['neg_item']
-        user_embeddings = user_all_embeddings[users, :]
-        item_embeddings = item_all_embeddings[items, :]
-        neg_item_embeddings = item_all_embeddings[neg_items, :]
-        return user_embeddings, item_embeddings, neg_item_embeddings
-
-    @torch.no_grad()
-    def get_embedding(self):
-        A_hat = self.sparse_norm_adj
-        ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
-        all_embeddings = [ego_embeddings]
-        for k in range(self.layers):
-            ego_embeddings = torch.sparse.mm(A_hat, ego_embeddings)
+            ego_embeddings = torch.sparse.mm(self.sparse_norm_adj, ego_embeddings)
             all_embeddings += [ego_embeddings]
         all_embeddings = torch.stack(all_embeddings, dim=1)
         all_embeddings = torch.mean(all_embeddings, dim=1)
         user_all_embeddings = all_embeddings[:self.data.user_num, :]
         item_all_embeddings = all_embeddings[self.data.user_num:, :]
         return user_all_embeddings, item_all_embeddings
+
 
