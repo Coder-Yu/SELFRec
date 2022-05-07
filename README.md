@@ -79,6 +79,16 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
       </tr>
   </table>
 
+<h2>Implement Your Model</h2>
+ 1. Make your model inherit the proper base class.</br>
+ 2. Reimplement the following functions.</br>
+ 
+ + build()
+ + train()
+ + save()
+ + predict()
+
+
 <h2>Related Datasets</h2>
 <div>
  <table class="table table-hover table-bordered">
