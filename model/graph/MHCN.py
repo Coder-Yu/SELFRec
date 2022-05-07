@@ -1,6 +1,6 @@
 from base.graph_recommender import GraphRecommender
 import tensorflow as tf
-from util.loss import bpr_loss
+from util.loss_tf import bpr_loss
 from data.social import Relation
 from base.tf_interface import TFGraphInterface
 from util.sampler import next_batch_pairwise

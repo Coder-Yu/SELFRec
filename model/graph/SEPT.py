@@ -5,7 +5,7 @@ import numpy as np
 from base.tf_interface import TFGraphInterface
 import os
 from util.conf import OptionConf
-from util.loss import bpr_loss
+from util.loss_tf import bpr_loss
 from data.social import Relation
 from data.augmentor import GraphAugmentor
 from util.sampler import next_batch_pairwise

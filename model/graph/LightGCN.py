@@ -4,7 +4,7 @@ from base.graph_recommender import GraphRecommender
 from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
-from util.loss import bpr_loss_torch,l2_reg_loss_torch
+from util.loss_torch import bpr_loss,l2_reg_loss
 
 # paper: LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation. SIGIR'20
 
@@ -25,7 +25,7 @@ class LightGCN(GraphRecommender):
                 model.train()
                 rec_user_emb, rec_item_emb = model()
                 user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx, :], rec_item_emb[pos_idx, :], rec_item_emb[neg_idx, :]
-                batch_loss = bpr_loss_torch(user_emb,pos_item_emb,neg_item_emb) + l2_reg_loss_torch(self.reg, *[user_emb,pos_item_emb,neg_item_emb])
+                batch_loss = bpr_loss(user_emb,pos_item_emb,neg_item_emb) + l2_reg_loss(self.reg, *[user_emb,pos_item_emb,neg_item_emb])
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()

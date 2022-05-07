@@ -2,7 +2,7 @@ from base.graph_recommender import GraphRecommender
 from data.augmentor import GraphAugmentor
 import tensorflow as tf
 from base.tf_interface import TFGraphInterface
-from util.loss import bpr_loss, infoNCE
+from util.loss_tf import bpr_loss, infoNCE
 from util.conf import OptionConf
 import os
 from util.sampler import next_batch_pairwise

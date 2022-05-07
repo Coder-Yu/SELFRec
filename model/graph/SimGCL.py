@@ -5,7 +5,7 @@ from base.graph_recommender import GraphRecommender
 from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
-from util.loss import bpr_loss_torch, l2_reg_loss_torch, infoNCE_torch
+from util.loss_torch import bpr_loss, l2_reg_loss, infoNCE
 
 # Paper: Are graph augmentations necessary? simple graph contrastive learning for recommendation. SIGIR'22
 
@@ -28,9 +28,9 @@ class SimGCL(GraphRecommender):
                 model.train()
                 rec_user_emb, rec_item_emb = model()
                 user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx, :], rec_item_emb[pos_idx, :], rec_item_emb[neg_idx, :]
-                rec_loss = bpr_loss_torch(user_emb, pos_item_emb, neg_item_emb)
+                rec_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb)
                 cl_loss = self.cl_rate * model.cal_cl_loss([user_idx,pos_idx])
-                batch_loss =  rec_loss + l2_reg_loss_torch(self.reg, *[user_emb, pos_item_emb, neg_item_emb]) + cl_loss
+                batch_loss =  rec_loss + l2_reg_loss(self.reg, *[user_emb, pos_item_emb, neg_item_emb]) + cl_loss
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()
@@ -92,6 +92,6 @@ class SimGCL_Encoder(nn.Module):
         user_view_1, item_view_1 = F.normalize(user_view_1,dim=1),F.normalize(item_view_1,dim=1)
         user_view_2, item_view_2 = self.forward(perturbed=True)
         user_view_2, item_view_2 = F.normalize(user_view_1, dim=1), F.normalize(item_view_2, dim=1)
-        user_cl_loss = infoNCE_torch(user_view_1[u_idx, :], user_view_2[u_idx, :], 0.2)
-        item_cl_loss = infoNCE_torch(item_view_1[i_idx, :], item_view_2[i_idx, :], 0.2)
+        user_cl_loss = infoNCE(user_view_1[u_idx, :], user_view_2[u_idx, :], 0.2)
+        item_cl_loss = infoNCE(item_view_1[i_idx, :], item_view_2[i_idx, :], 0.2)
         return user_cl_loss + item_cl_loss
