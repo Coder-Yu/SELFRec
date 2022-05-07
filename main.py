@@ -3,7 +3,7 @@ from util.conf import ModelConf
 
 if __name__ == '__main__':
     #Register your model here
-    graph_models = ['SGL','SimGCL','SEPT','MHCN','BUIR']
+    graph_models = ['SGL','SimGCL','SEPT','MHCN','BUIR','SelfCF']
     sequential_models = []
     dnn_models = []
 
