@@ -5,6 +5,7 @@ from time import strftime, localtime, time
 from data.loader import FileIO
 from os.path import abspath
 from util.evaluation import ranking_evaluation
+import sys
 
 
 class GraphRecommender(Recommender):
@@ -34,6 +35,13 @@ class GraphRecommender(Recommender):
         pass
 
     def test(self):
+        def process_bar(num, total):
+            rate = float(num) / total
+            ratenum = int(50 * rate)
+            r = '\r[{}{}]{}%'.format('+' * ratenum, ' ' * (50 - ratenum), ratenum*2)
+            sys.stdout.write(r)
+            sys.stdout.flush()
+
         # predict
         rec_list = {}
         user_count = len(self.data.test_set)
@@ -47,7 +55,9 @@ class GraphRecommender(Recommender):
             item_names = [self.data.id2item[iid] for iid in ids]
             rec_list[user] = list(zip(item_names, scores))
             if i % 1000 == 0:
-                print('Testing '+ self.model_name, 'progress:' + str(i) + '/' + str(user_count))
+                process_bar(i, user_count)
+        process_bar(user_count, user_count)
+        print('')
         return rec_list
 
     def evaluate(self, rec_list):
