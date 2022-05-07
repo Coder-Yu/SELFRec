@@ -38,7 +38,7 @@ class GraphRecommender(Recommender):
         def process_bar(num, total):
             rate = float(num) / total
             ratenum = int(50 * rate)
-            r = '\r[{}{}]{}%'.format('+' * ratenum, ' ' * (50 - ratenum), ratenum*2)
+            r = '\rProgress: [{}{}]{}%'.format('+' * ratenum, ' ' * (50 - ratenum), ratenum*2)
             sys.stdout.write(r)
             sys.stdout.flush()
 
