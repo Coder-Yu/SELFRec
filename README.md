@@ -40,44 +40,42 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
 
 <table class="table table-hover table-bordered">
   <tr>
-		<th>Model</th>
-		<th>Paper</th>
-
+		<th>Model</th> 		<th>Paper</th>        <th>Code</th>
    </tr>
      <tr>
     <td scope="row">LightGCN</td>
         <td>He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation, SIGIR'20.
-         </td>
+	     </td> <td>PyTorch</d>
       </tr>
            <tr>
     <td scope="row">SimGCL</td>
         <td>Yu et al. Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation, SIGIR'22.
-         </td>
+         </td> <td>PyTorch</d>
       </tr>
      <tr>
     <td scope="row">MHCN</td>
         <td>Yu et al. Self-Supervised Multi-Channel Hypergraph Convolutional Network for Social Recommendation, WWW'21.
-         </td>
+         </td> <td>TensorFlow</d>
       </tr>
      <tr>
     <td scope="row">SGL</td>
         <td>Wu et al. Self-supervised Graph Learning for Recommendation, SIGIR'21.
-         </td>
+         </td> <td>TensorFlow</d>
       </tr>
     <tr>
     <td scope="row">SEPT</td>
         <td>Yu et al. Socially-Aware Self-supervised Tri-Training for Recommendation, KDD'21.
-         </td>
+         </td> <td>TensorFlow</d>
       </tr>
           <tr>
     <td scope="row">BUIR</td>
         <td>Lee et al. Bootstrapping User and Item Representations for One-Class Collaborative Filtering, SIGIR'21.
-         </td>
+         </td> <td>PyTorch</d>
       </tr>
     <tr>
     <td scope="row">SelfCF</td>
         <td>Zhou et al. SelfCF: A Simple Framework for Self-supervised Collaborative Filtering, arXiv'21.
-         </td>
+         </td> <td>PyTorch</d>
       </tr>
   </table>
 
