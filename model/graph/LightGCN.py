@@ -7,9 +7,8 @@ from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
 from util.loss import bpr_loss_torch,l2_reg_loss_torch
 
-# paper: Bootstrapping User and Item Representations for One-Class Collaborative Filtering. SIGIR'21
+# paper: LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation. SIGIR'20
 
-# Note: SelfCF has three variants and We implement SelfCF-he because it is reported as the best in most cases. The backbone is LightGCN.
 
 class LightGCN(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
