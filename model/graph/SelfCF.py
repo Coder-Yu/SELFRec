@@ -8,7 +8,7 @@ from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
 
 
-# paper: Bootstrapping User and Item Representations for One-Class Collaborative Filtering. SIGIR'21
+# SELFCF: A Simple Framework for Self-supervised Collaborative Filtering
 
 # Note: SelfCF has three variants and We implement SelfCF-he because it is reported as the best in most cases. The backbone is LightGCN.
 
