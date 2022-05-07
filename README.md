@@ -32,6 +32,7 @@
 
 <h2>Reference</h2>
 If you find this repo helpful to your research, please cite our paper.
+  
 ```
 @article{yu2022self,
   title={Self-Supervised Learning for Recommender Systems: A Survey},
