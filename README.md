@@ -98,7 +98,7 @@
     <th colspan="2" class="text-center">Links (Type)</th>
     </tr>   
    <tr>
-    <td><a href="https://pan.baidu.com/s/1hrJP6rq" target="_blank"><b>Douban</b></a> [1]</td>
+    <td><a href="https://pan.baidu.com/s/1hrJP6rq" target="_blank"><b>Douban</b></a> </td>
     <td>2,848</td>
     <td>39,586</td>
     <td width="6%">894,887</td>
@@ -109,7 +109,7 @@
     <td>Trust</td>
     </tr> 
 	 <tr>
-    <td><a href="http://files.grouplens.org/datasets/hetrec2011/hetrec2011-lastfm-2k.zip" target="_blank"><b>LastFM</b></a> [2]</td>
+    <td><a href="http://files.grouplens.org/datasets/hetrec2011/hetrec2011-lastfm-2k.zip" target="_blank"><b>LastFM</b></a> </td>
     <td>1,892</td>
     <td>17,632</td>
     <td width="6%">92,834</td>
@@ -120,7 +120,7 @@
     <td>Trust</td>
     </tr> 
     <tr>
-    <td><a href="https://www.dropbox.com/sh/h97ymblxt80txq5/AABfSLXcTu0Beib4r8P5I5sNa?dl=0" target="_blank"><b>Yelp</b></a> [3]</td>
+    <td><a href="https://www.dropbox.com/sh/h97ymblxt80txq5/AABfSLXcTu0Beib4r8P5I5sNa?dl=0" target="_blank"><b>Yelp</b></a> </td>
     <td>19,539</td>
     <td>21,266</td>
     <td width="6%">450,884</td>
@@ -131,7 +131,7 @@
     <td>Trust</td>
     </tr>
     <tr>
-    <td><a href="https://www.dropbox.com/sh/20l0xdjuw0b3lo8/AABBZbRg9hHiN42EHqBSvLpta?dl=0" target="_blank"><b>Amazon-Book</b></a> [4]</td>
+    <td><a href="https://www.dropbox.com/sh/20l0xdjuw0b3lo8/AABBZbRg9hHiN42EHqBSvLpta?dl=0" target="_blank"><b>Amazon-Book</b></a> </td>
     <td>52,463</td>
     <td>91,599</td>
     <td width="6%">2,984,108</td>
@@ -143,12 +143,7 @@
     </tr>  
   </table>
 </div>
-<ol>
-<li>G. Zhao, X. Qian, and X. Xie, “User-service rating prediction by exploring social users’ rating behaviors,” IEEE Transactions on Multimedia, vol. 18, no. 3, pp. 496–506, 2016.</li>
-<li>Iván Cantador, Peter Brusilovsky, and Tsvi Kuflik. 2011. 2nd Workshop on Information Heterogeneity and Fusion in Recom- mender Systems (HetRec 2011). In Proceedings of the 5th ACM conference on Recommender systems (RecSys 2011). ACM, New York, NY, USA</li>
-<li>Yu et al. Self-Supervised Multi-Channel Hypergraph Convolutional Network for Social Recommendation, WWW'21.</li>
-<li>He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation, SIGIR'20.</li>
-</ol>
+
 
 <h2>Reference</h2>
 If you find this repo helpful to your research, please cite our paper.
