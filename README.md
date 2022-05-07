@@ -81,14 +81,11 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
 
 <h2>Implement Your Model</h2>
  
-1. Create a .conf file for your model in the directory named conf.
-2. Make your model inherit the proper base class.
-3. Reimplement the following functions.
-	+ build()
-	+ train()
-	+ save()
-	+ predict()
-4. Register your model in main.py.
+1. Create a **.conf** file for your model in the directory named conf.
+2. Make your model **inherit** the proper base class.
+3. **Reimplement** the following functions.
+	+ *build*(), *train*(), *save*(), *predict*()
+4. Register your model in **main.py**.
 
 
 
