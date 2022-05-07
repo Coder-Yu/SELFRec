@@ -40,5 +40,4 @@ If you find this repo helpful to your research, please cite our paper.
   journal={arXiv preprint arXiv:2203.15876},
   year={2022}
 }
-
 ```
