@@ -30,7 +30,13 @@
 <li>torch==1.7.0</li>
 </ul>
 
-<h2>Implemented Algorithms</h2>
+<h2>Usage</h2>
+<ol>
+<li>Configure the xx.conf file in the directory named config. (xx is the name of the model you want to run)</li>
+<li>Run main.py and choose the model you want to run.</li>
+</ol>
+
+<h2>Implemented Models</h2>
 
 <table class="table table-hover table-bordered">
   <tr>
