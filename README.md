@@ -40,44 +40,54 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
 
 <table class="table table-hover table-bordered">
   <tr>
-		<th>Model</th> 		<th>Paper</th>        <th>Code</th>
+		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th>
    </tr>
      <tr>
     <td scope="row">LightGCN</td>
         <td>He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation, SIGIR'20.
-	     </td> <td>PyTorch</d>
+	     </td> <td>Graph</d>  <td>PyTorch</d>
       </tr>
            <tr>
     <td scope="row">SimGCL</td>
         <td>Yu et al. Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation, SIGIR'22.
-         </td> <td>PyTorch</d>
+         </td> <td>Graph</d> <td>PyTorch</d>
       </tr>
      <tr>
     <td scope="row">MHCN</td>
         <td>Yu et al. Self-Supervised Multi-Channel Hypergraph Convolutional Network for Social Recommendation, WWW'21.
-         </td> <td>TensorFlow</d>
+         </td> <td>Graph</d> <td>TensorFlow</d>
       </tr>
      <tr>
     <td scope="row">SGL</td>
         <td>Wu et al. Self-supervised Graph Learning for Recommendation, SIGIR'21.
-         </td> <td>TensorFlow</d>
+         </td> <td>Graph</d> <td>TensorFlow</d>
       </tr>
     <tr>
     <td scope="row">SEPT</td>
         <td>Yu et al. Socially-Aware Self-supervised Tri-Training for Recommendation, KDD'21.
-         </td> <td>TensorFlow</d>
+         </td> <td>Graph</d> <td>TensorFlow</d>
       </tr>
           <tr>
     <td scope="row">BUIR</td>
         <td>Lee et al. Bootstrapping User and Item Representations for One-Class Collaborative Filtering, SIGIR'21.
-         </td> <td>PyTorch</d>
+         </td> <td>Graph</d> <td>PyTorch</d>
       </tr>
     <tr>
     <td scope="row">SelfCF</td>
         <td>Zhou et al. SelfCF: A Simple Framework for Self-supervised Collaborative Filtering, arXiv'21.
-         </td> <td>PyTorch</d>
+         </td> <td>Graph</d> <td>PyTorch</d>
       </tr>
   </table>
+
+<h2>Implement Your Model</h2>
+ 
+1. Create a **.conf** file for your model in the directory named conf.
+2. Make your model **inherit** the proper base class.
+3. **Reimplement** the following functions.
+	+ *build*(), *train*(), *save*(), *predict*()
+4. Register your model in **main.py**.
+
+
 
 <h2>Related Datasets</h2>
 <div>
@@ -145,7 +155,8 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
 
 <h2>Reference</h2>
 If you find this repo helpful to your research, please cite our paper.
-  
+<p></p> 
+
 ```
 @article{yu2022self,
   title={Self-Supervised Learning for Recommender Systems: A Survey},
