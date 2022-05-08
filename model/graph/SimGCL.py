@@ -39,7 +39,7 @@ class SimGCL(GraphRecommender):
             model.eval()
             with torch.no_grad():
                 self.user_emb, self.item_emb = self.model()
-            self.training_evaluation(epoch)
+            self.fast_evaluation(epoch)
         self.user_emb, self.item_emb = self.best_user_emb, self.best_item_emb
 
     def save(self):

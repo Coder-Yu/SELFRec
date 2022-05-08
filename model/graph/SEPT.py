@@ -188,7 +188,7 @@ class SEPT(GraphRecommender):
                     _, l1 = self.sess.run([v1_op, rec_loss], feed_dict=feed_dict)
                     print('training:', epoch + 1, 'batch', n, 'rec loss:', l1)
             self.U, self.V = self.sess.run([self.rec_user_embeddings, self.rec_item_embeddings])
-            self.training_evaluation(epoch)
+            self.fast_evaluation(epoch)
         self.U, self.V = self.best_user_emb, self.best_item_emb
 
     def save(self):

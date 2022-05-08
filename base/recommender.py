@@ -1,10 +1,8 @@
-from data.loader import FileIO
 from data.data import Data
 from util.conf import OptionConf
 from util.logger import Log
 from os.path import abspath
 from time import strftime, localtime, time
-from util.algorithm import find_k_largest
 
 
 class Recommender(object):
@@ -49,7 +47,6 @@ class Recommender(object):
             parStr += key[1:] + ':' + args[key] + '  '
         print('Specific parameters:', parStr)
 
-
     def build(self):
         pass
 
@@ -68,7 +65,7 @@ class Recommender(object):
     def load(self):
         pass
 
-    def evaluate(self,rec_list):
+    def evaluate(self, rec_list):
         pass
 
     def execute(self):
@@ -82,4 +79,3 @@ class Recommender(object):
         rec_list = self.test()
         print('Evaluating...')
         self.evaluate(rec_list)
-

@@ -38,7 +38,7 @@ class BUIR(GraphRecommender):
                 print('training:', epoch + 1, 'batch', n, 'batch_loss:', batch_loss.item())
             model.eval()
             self.p_u_online, self.u_online, self.p_i_online, self.i_online = self.model.get_embedding()
-            self.training_evaluation(epoch)
+            self.fast_evaluation(epoch)
         self.p_u_online, self.u_online, self.p_i_online, self.i_online = self.best_p_u, self.best_u, self.best_p_i, self.best_i
 
     def save(self):

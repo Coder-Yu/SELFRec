@@ -83,7 +83,7 @@ class GraphRecommender(Recommender):
         FileIO.write_file(out_dir, file_name, self.result)
         print('The result of %s:\n%s' % (self.model_name, ''.join(self.result)))
 
-    def training_evaluation(self, epoch):
+    def fast_evaluation(self, epoch):
         print('evaluating the model...')
         rec_list = self.test()
         measure = ranking_evaluation(self.data.test_set, rec_list, [self.max_N])

@@ -200,7 +200,7 @@ class MHCN(GraphRecommender):
                 _, l1, l2 = self.sess.run([train_op, rec_loss, self.ss_loss], feed_dict={self.u_idx: user_idx, self.neg_idx: j_idx, self.v_idx: i_idx})
                 print('training:', epoch + 1, 'batch', n, 'rec loss:',l1,'ssl loss',l2)
             self.U, self.V = self.sess.run([self.final_user_embeddings, self.final_item_embeddings])
-            self.training_evaluation(epoch)
+            self.fast_evaluation(epoch)
         self.U, self.V = self.best_user_emb, self.best_item_emb
 
     def save(self):
