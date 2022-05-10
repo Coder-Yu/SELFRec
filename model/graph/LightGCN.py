@@ -39,7 +39,7 @@ class LightGCN(GraphRecommender):
 
     def save(self):
         with torch.no_grad():
-            self.user_emb, self.item_emb = self.model.forward()
+            self.best_user_emb, self.best_item_emb = self.model.forward()
 
     def predict(self, u):
         u = self.data.get_user_id(u)
