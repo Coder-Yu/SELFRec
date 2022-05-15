@@ -42,12 +42,8 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
   <tr>
 		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th>
    </tr>
-     <tr>
-    <td scope="row">LightGCN</td>
-        <td>He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation, SIGIR'20.
-	     </td> <td>Graph</d>  <td>PyTorch</d>
-      </tr>
-           <tr>
+
+   <tr>
     <td scope="row">SimGCL</td>
         <td>Yu et al. Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation, SIGIR'22.
          </td> <td>Graph</d> <td>PyTorch</d>
@@ -72,10 +68,20 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
         <td>Lee et al. Bootstrapping User and Item Representations for One-Class Collaborative Filtering, SIGIR'21.
          </td> <td>Graph</d> <td>PyTorch</d>
       </tr>
+        <tr>
+    <td scope="row">SSL4Rec</td>
+        <td>Yao et al. Self-supervised Learning for Large-scale Item Recommendations, CIKM'21.
+	     </td> <td>Graph</d>  <td>PyTorch</d>
+      </tr>
     <tr>
     <td scope="row">SelfCF</td>
         <td>Zhou et al. SelfCF: A Simple Framework for Self-supervised Collaborative Filtering, arXiv'21.
          </td> <td>Graph</d> <td>PyTorch</d>
+      </tr>
+    <tr>
+    <td scope="row">LightGCN</td>
+        <td>He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation, SIGIR'20.
+	     </td> <td>Graph</d>  <td>PyTorch</d>
       </tr>
   </table>
 

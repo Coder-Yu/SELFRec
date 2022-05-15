@@ -66,7 +66,7 @@ class SelfCF_HE(nn.Module):
         u_online, i_online = self.online_encoder(inputs)
         with torch.no_grad():
             users, items = inputs['user'], inputs['item']
-            u_target, i_target = self.u_target_his.clone()[users, :], self.i_target_his.clone()[items, :]
+            u_target, i_target = self.u_target_his.clone()[users], self.i_target_his.clone()[items]
             u_target.detach()
             i_target.detach()
             #
@@ -119,11 +119,11 @@ class LGCN_Encoder(nn.Module):
             all_embeddings += [ego_embeddings]
         all_embeddings = torch.stack(all_embeddings, dim=1)
         all_embeddings = torch.mean(all_embeddings, dim=1)
-        user_all_embeddings = all_embeddings[:self.data.user_num, :]
-        item_all_embeddings = all_embeddings[self.data.user_num:, :]
+        user_all_embeddings = all_embeddings[:self.data.user_num]
+        item_all_embeddings = all_embeddings[self.data.user_num:]
         users, items = inputs['user'], inputs['item']
-        user_embeddings = user_all_embeddings[users, :]
-        item_embeddings = item_all_embeddings[items, :]
+        user_embeddings = user_all_embeddings[users]
+        item_embeddings = item_all_embeddings[items]
         return user_embeddings, item_embeddings
 
     @torch.no_grad()
@@ -136,6 +136,6 @@ class LGCN_Encoder(nn.Module):
             all_embeddings += [ego_embeddings]
         all_embeddings = torch.stack(all_embeddings, dim=1)
         all_embeddings = torch.mean(all_embeddings, dim=1)
-        user_all_embeddings = all_embeddings[:self.data.user_num, :]
-        item_all_embeddings = all_embeddings[self.data.user_num:, :]
+        user_all_embeddings = all_embeddings[:self.data.user_num]
+        item_all_embeddings = all_embeddings[self.data.user_num:]
         return user_all_embeddings, item_all_embeddings

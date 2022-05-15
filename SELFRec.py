@@ -6,8 +6,12 @@ class SELFRec(object):
         self.social_data = []
         self.feature_data = []
         self.config = config
-        self.training_data = FileIO.load_data_set(config['training.set'], config['model.type'])
-        self.test_data = FileIO.load_data_set(config['test.set'], config['model.type'])
+        if config['model.type'] == 'sequential':
+            self.training_data, self.test_data = FileIO.load_data_set(config['sequence.data'], config['model.type'])
+        else:
+            self.training_data = FileIO.load_data_set(config['training.set'], config['model.type'])
+            self.test_data = FileIO.load_data_set(config['test.set'], config['model.type'])
+
         self.kwargs = {}
         if config.contain('social.data'):
             social_data = FileIO.load_social_data(self.config['social.data'])

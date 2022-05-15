@@ -2,27 +2,27 @@ from SELFRec import SELFRec
 from util.conf import ModelConf
 
 if __name__ == '__main__':
-    #Register your model here
+    # Register your model here
     baseline = ['LightGCN']
-    graph_models = ['SGL','SimGCL','SEPT','MHCN','BUIR','SelfCF']
+    graph_models = ['SGL', 'SimGCL', 'SEPT', 'MHCN', 'BUIR', 'SelfCF', 'SSL4Rec']
     sequential_models = []
-    dnn_models = []
 
-    print('='*80)
+    print('=' * 80)
     print('   SELFRec: A library for self-supervised recommendation.   ')
-    print('='*80)
+    print('=' * 80)
 
     print('Baseline Models:')
     print('   '.join(baseline))
-    print('-'*80)
+    print('-' * 80)
     print('Graph-Based Models:')
     print('   '.join(graph_models))
 
-    print('='*80)
+    print('=' * 80)
     model = input('Please enter the model you want to run:')
     import time
+
     s = time.time()
-    if model in baseline or model in graph_models or model in sequential_models or model in dnn_models:
+    if model in baseline or model in graph_models or model in sequential_models:
         conf = ModelConf('./conf/' + model + '.conf')
     else:
         print('Wrong model name!')

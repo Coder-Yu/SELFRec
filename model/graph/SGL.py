@@ -2,7 +2,7 @@ from base.graph_recommender import GraphRecommender
 from data.augmentor import GraphAugmentor
 import tensorflow as tf
 from base.tf_interface import TFGraphInterface
-from util.loss_tf import bpr_loss, infoNCE
+from util.loss_tf import bpr_loss, InfoNCE
 from util.conf import OptionConf
 import os
 from util.sampler import next_batch_pairwise
@@ -110,7 +110,7 @@ class SGL(GraphRecommender):
         emb_merge2 = tf.concat([user_emb2, item_emb2], axis=0)
         normalize_emb_merge1 = tf.nn.l2_normalize(emb_merge1, 1)
         normalize_emb_merge2 = tf.nn.l2_normalize(emb_merge2, 1)
-        ssl_loss = self.ssl_reg * infoNCE(normalize_emb_merge1, normalize_emb_merge2, 0.2)
+        ssl_loss = self.ssl_reg * InfoNCE(normalize_emb_merge1, normalize_emb_merge2, 0.2)
         return ssl_loss
 
     def train(self):

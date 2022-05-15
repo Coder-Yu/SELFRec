@@ -3,7 +3,7 @@ from collections import defaultdict
 from data.data import Data
 from data.graph import Graph
 import scipy.sparse as sp
-
+import pickle
 
 class Interaction(Data,Graph):
     def __init__(self, conf, training, test):
@@ -24,6 +24,17 @@ class Interaction(Data,Graph):
         self.ui_adj = self.__create_sparse_bipartite_adjacency()
         self.norm_adj = self.normalize_graph_mat(self.ui_adj)
         self.interaction_mat = self.__create_sparse_interaction_matrix()
+        popularity_user = {}
+        for u in self.user:
+            popularity_user[self.user[u]] = len(self.training_set_u[u])
+        popularity_item = {}
+        for u in self.item:
+            popularity_item[self.item[u]] = len(self.training_set_i[u])
+        f = open('popularity_user','wb')
+        pickle.dump(popularity_user,f)
+        f = open('popularity_item', 'wb')
+        pickle.dump(popularity_item, f)
+
 
     def __generate_set(self):
         for entry in self.training_data:
@@ -44,7 +55,7 @@ class Interaction(Data,Graph):
             self.test_set[user][item] = rating
             self.test_set_item.add(item)
 
-    def __create_sparse_bipartite_adjacency(self):
+    def __create_sparse_bipartite_adjacency(self, self_connection=False):
         '''
         return a sparse adjacency matrix with the shape (user number + item number, user number + item number)
         '''
@@ -56,6 +67,8 @@ class Interaction(Data,Graph):
         ratings = np.ones_like(user_np, dtype=np.float32)
         tmp_adj = sp.csr_matrix((ratings, (user_np, item_np + self.user_num)), shape=(n_nodes, n_nodes),dtype=np.float32)
         adj_mat = tmp_adj + tmp_adj.T
+        if self_connection:
+            adj_mat += sp.eye(n_nodes)
         return adj_mat
 
     def convert_to_laplacian_mat(self, adj_mat):

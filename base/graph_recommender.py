@@ -50,7 +50,7 @@ class GraphRecommender(Recommender):
             # predictedItems = denormalize(predictedItems, self.data.rScale[-1], self.data.rScale[0])
             rated_list, li = self.data.user_rated(user)
             for item in rated_list:
-                candidates[self.data.item[item]] = 0
+                candidates[self.data.item[item]] = -10e8
             ids, scores = find_k_largest(self.max_N, candidates)
             item_names = [self.data.id2item[iid] for iid in ids]
             rec_list[user] = list(zip(item_names, scores))

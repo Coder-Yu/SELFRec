@@ -5,7 +5,6 @@ from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
 from util.loss_torch import bpr_loss,l2_reg_loss
-
 # paper: LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation. SIGIR'20
 
 
@@ -24,8 +23,8 @@ class LightGCN(GraphRecommender):
                 user_idx, pos_idx, neg_idx = batch
                 model.train()
                 rec_user_emb, rec_item_emb = model()
-                user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx, :], rec_item_emb[pos_idx, :], rec_item_emb[neg_idx, :]
-                batch_loss = bpr_loss(user_emb,pos_item_emb,neg_item_emb) + l2_reg_loss(self.reg, *[user_emb,pos_item_emb,neg_item_emb])
+                user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx], rec_item_emb[pos_idx], rec_item_emb[neg_idx]
+                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, user_emb,pos_item_emb)
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()
@@ -34,8 +33,11 @@ class LightGCN(GraphRecommender):
             model.eval()
             with torch.no_grad():
                 self.user_emb, self.item_emb = self.model()
-            self.fast_evaluation(epoch)
+            if epoch%10==0:
+                self.fast_evaluation(epoch)
         self.user_emb, self.item_emb = self.best_user_emb, self.best_item_emb
+
+
 
     def save(self):
         with torch.no_grad():
@@ -73,8 +75,8 @@ class LGCN_Encoder(nn.Module):
             all_embeddings += [ego_embeddings]
         all_embeddings = torch.stack(all_embeddings, dim=1)
         all_embeddings = torch.mean(all_embeddings, dim=1)
-        user_all_embeddings = all_embeddings[:self.data.user_num, :]
-        item_all_embeddings = all_embeddings[self.data.user_num:, :]
+        user_all_embeddings = all_embeddings[:self.data.user_num]
+        item_all_embeddings = all_embeddings[self.data.user_num:]
         return user_all_embeddings, item_all_embeddings
 
 

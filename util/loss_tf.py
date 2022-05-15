@@ -7,7 +7,7 @@ def bpr_loss(user_emb, pos_item_emb, neg_item_emb):
     return loss
 
 
-def infoNCE(view1, view2, temperature):
+def InfoNCE(view1, view2, temperature):
     pos_score = tf.reduce_sum(tf.multiply(view1, view2), axis=1)
     ttl_score = tf.matmul(view1, view2, transpose_a=False, transpose_b=True)
     pos_score = tf.exp(pos_score / temperature)

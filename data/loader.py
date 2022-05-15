@@ -31,18 +31,16 @@ class FileIO(object):
                     weight = items[2]
                     data.append([user_id, item_id, float(weight)])
 
-        # if dtype == 'sequential':
-        #     with open(file) as f:
-        #         ratings = f.readlines()
-        #         for lineNo, line in enumerate(ratings):
-        #             items = split(' ', line.strip())
-        #             user_id = items[0]
-        #             item_id = items[1]
-        #             rating = items[2]
-        #             if test:
-        #                 test_data.append([user_id, item_id, float(rating)])
-        #             else:
-        #                 training_data.append([user_id, item_id, float(rating)])
+        if dtype == 'sequential':
+            training_data, test_data = [], []
+            with open(file) as f:
+                for line in f:
+                    items = split(':', line.strip())
+                    user_id = items[0]
+                    seq = items[1].strip().split()
+                    training_data.append(seq[:-1])
+                    test_data.append(seq[-1])
+                data = (training_data, test_data)
         return data
 
     @staticmethod
