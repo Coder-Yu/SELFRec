@@ -40,50 +40,52 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
 
 <table class="table table-hover table-bordered">
   <tr>
-		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th>
+		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th> <th>SSL Effectiveness</th>
    </tr>
 
    <tr>
     <td scope="row">SimGCL</td>
         <td>Yu et al. Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation, SIGIR'22.
-         </td> <td>Graph</d> <td>PyTorch</d>
+         </td> <td>Graph</d> <td>PyTorch</d> <th>⭐⭐⭐⭐⭐</th>
       </tr>
      <tr>
     <td scope="row">MHCN</td>
         <td>Yu et al. Self-Supervised Multi-Channel Hypergraph Convolutional Network for Social Recommendation, WWW'21.
-         </td> <td>Graph</d> <td>TensorFlow</d>
+         </td> <td>Graph</d> <td>TensorFlow</d> <th>⭐⭐⭐</th>
       </tr>
      <tr>
     <td scope="row">SGL</td>
         <td>Wu et al. Self-supervised Graph Learning for Recommendation, SIGIR'21.
-         </td> <td>Graph</d> <td>TensorFlow</d>
+         </td> <td>Graph</d> <td>TensorFlow</d> <th>⭐⭐⭐⭐</th>
       </tr>
     <tr>
     <td scope="row">SEPT</td>
         <td>Yu et al. Socially-Aware Self-supervised Tri-Training for Recommendation, KDD'21.
-         </td> <td>Graph</d> <td>TensorFlow</d>
+         </td> <td>Graph</d> <td>TensorFlow</d> <th>⭐⭐⭐</th>
       </tr>
           <tr>
     <td scope="row">BUIR</td>
         <td>Lee et al. Bootstrapping User and Item Representations for One-Class Collaborative Filtering, SIGIR'21.
-         </td> <td>Graph</d> <td>PyTorch</d>
+         </td> <td>Graph</d> <td>PyTorch</d> <th>✰</th>
       </tr>
         <tr>
     <td scope="row">SSL4Rec</td>
         <td>Yao et al. Self-supervised Learning for Large-scale Item Recommendations, CIKM'21.
-	     </td> <td>Graph</d>  <td>PyTorch</d>
+	     </td> <td>Graph</d>  <td>PyTorch</d> <th>✰</th>
       </tr>
     <tr>
     <td scope="row">SelfCF</td>
         <td>Zhou et al. SelfCF: A Simple Framework for Self-supervised Collaborative Filtering, arXiv'21.
-         </td> <td>Graph</d> <td>PyTorch</d>
+         </td> <td>Graph</d> <td>PyTorch</d> <th>✰</th>
       </tr>
     <tr>
     <td scope="row">LightGCN</td>
         <td>He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation, SIGIR'20.
-	     </td> <td>Graph</d>  <td>PyTorch</d>
+	     </td> <td>Graph</d>  <td>PyTorch</d> <th>N/A</th>
       </tr>
   </table>
+  
+**Note:** For those methods whose reported results in the original papers cannot be successfully reproduced, we label them with ✰. The more performance improvement SSL brings, the more stars the corresponding method wins.
 
 <h2>Implement Your Model</h2>
  
