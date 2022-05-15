@@ -71,7 +71,7 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
         <tr>
     <td scope="row">SSL4Rec</td>
         <td>Yao et al. Self-supervised Learning for Large-scale Item Recommendations, CIKM'21.
-	     </td> <td>Graph</d>  <td>PyTorch</d> <td></td>
+	     </td> <td>Graph</d>  <td>PyTorch</d> <td>❔</td>
       </tr>
     <tr>
     <td scope="row">SelfCF</td>
@@ -85,7 +85,7 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
       </tr>
   </table>
   
-**Note:** For those methods which are with official codes but cannot be successfully reproduced as reported, we label them with ❌. For those methods which are without official codes and currently cannot be reproduced as reported, we label them with ❓. For those effective methods, the more performance improvement SSL brings, the more ⭐ the corresponding method wins.
+**Note:** For those methods which are with official codes but cannot be successfully reproduced as reported, we label them with ❌. For those methods which are without official codes and currently cannot be reproduced as reported, we label them with ❔. For those effective methods, the more performance improvement SSL brings, the more ⭐ the corresponding method wins.
 
 <h2>Implement Your Model</h2>
  
