@@ -76,7 +76,7 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
     <tr>
     <td scope="row">SelfCF</td>
         <td>Zhou et al. SelfCF: A Simple Framework for Self-supervised Collaborative Filtering, arXiv'21.
-         </td> <td>Graph</d> <td>PyTorch</d> <td>⚠️</td>
+         </td> <td>Graph</d> <td>PyTorch</d> <td>❔</td>
       </tr>
     <tr>
     <td scope="row">LightGCN</td>
