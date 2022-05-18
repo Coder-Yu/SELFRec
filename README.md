@@ -83,6 +83,11 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
         <td>He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation, SIGIR'20.
 	     </td> <td>Graph</d>  <td>PyTorch</d> <td>N/A</td>
       </tr>
+         <tr>
+    <td scope="row">MF</td>
+        <td>Yehuda et al. Matrix Factorization Techniques for Recommender Systems, IEEE Computer'09.
+	     </td> <td>Graph</d>  <td>PyTorch</d> <td>N/A</td>
+      </tr>
   </table>
   
 **Note:** For those methods which have released official codes but cannot be successfully reproduced as reported, we label them with ⚠️. For those methods which are without official codes and currently cannot be reproduced as reported, we label them with ❔. For those effective methods, the more performance improvement SSL brings, the more ⭐ the corresponding method wins.

@@ -42,10 +42,11 @@ class Recommender(object):
         print('Learning Rate:', self.lRate)
         print('Regularization Parameter: reg %.4f' % self.reg)
         parStr = ''
-        args = OptionConf(self.config[self.config['model.name']])
-        for key in args.keys():
-            parStr += key[1:] + ':' + args[key] + '  '
-        print('Specific parameters:', parStr)
+        if self.config.contain(self.config['model.name']):
+            args = OptionConf(self.config[self.config['model.name']])
+            for key in args.keys():
+                parStr += key[1:] + ':' + args[key] + '  '
+            print('Specific parameters:', parStr)
 
     def build(self):
         pass

@@ -5,8 +5,8 @@ import torch.nn.functional as F
 def bpr_loss(user_emb, pos_item_emb, neg_item_emb):
     pos_score = torch.mul(user_emb, pos_item_emb).sum(dim=1)
     neg_score = torch.mul(user_emb, neg_item_emb).sum(dim=1)
-    loss = -torch.log(10e-8 + torch.sigmoid(pos_score - neg_score)).sum()
-    return loss
+    loss = -torch.log(10e-8 + torch.sigmoid(pos_score - neg_score))
+    return torch.mean(loss)
 
 
 def l2_reg_loss(reg, *args):
@@ -22,8 +22,8 @@ def batch_softmax_loss(user_emb, item_emb, temperature):
     pos_score = torch.exp(pos_score / temperature)
     ttl_score = torch.matmul(user_emb, item_emb.transpose(0, 1))
     ttl_score = torch.exp(ttl_score / temperature).sum(dim=1)
-    loss = -torch.log(pos_score / ttl_score).sum()
-    return loss
+    loss = -torch.log(pos_score / ttl_score)
+    return torch.mean(loss)
 
 
 def InfoNCE(view1, view2, temperature):
@@ -32,5 +32,18 @@ def InfoNCE(view1, view2, temperature):
     pos_score = torch.exp(pos_score / temperature)
     ttl_score = torch.matmul(view1, view2.transpose(0, 1))
     ttl_score = torch.exp(ttl_score / temperature).sum(dim=1)
-    cl_loss = -torch.log(pos_score / ttl_score).sum()
-    return cl_loss
+    cl_loss = -torch.log(pos_score / ttl_score)
+    return torch.mean(cl_loss)
+
+
+def kl_divergence(p_logit, q_logit):
+    p = F.softmax(p_logit, dim=-1)
+    kl = torch.sum(p * (F.log_softmax(p_logit, dim=-1) - F.log_softmax(q_logit, dim=-1)), 1)
+    return torch.mean(kl)
+
+def js_divergence(p_logit, q_logit):
+    p = F.softmax(p_logit, dim=-1)
+    q = F.softmax(q_logit, dim=-1)
+    kl_p = torch.sum(p * (F.log_softmax(p_logit, dim=-1) - F.log_softmax(q_logit, dim=-1)), 1)
+    kl_q = torch.sum(q * (F.log_softmax(q_logit, dim=-1) - F.log_softmax(p_logit, dim=-1)), 1)
+    return torch.mean(kl_p+kl_q)

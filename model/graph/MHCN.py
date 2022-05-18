@@ -25,7 +25,6 @@ class MHCN(GraphRecommender):
         print('Social data size: (user number: %d, relation number: %d).' % (self.social_data.size()))
         print('=' * 80)
 
-
     def build_hyper_adj_mats(self):
         S = self.social_data.get_social_mat()
         Y = self.data.interaction_mat
