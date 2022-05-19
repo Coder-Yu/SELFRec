@@ -38,7 +38,8 @@ class SSL4Rec(GraphRecommender):
                 optimizer.zero_grad()
                 batch_loss.backward()
                 optimizer.step()
-                print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_loss.item(), 'cl_loss', cl_loss.item())
+                if n % 100 == 0:
+                    print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_loss.item(), 'cl_loss', cl_loss.item())
             model.eval()
             with torch.no_grad():
                 self.query_emb, self.item_emb = self.model(list(range(self.data.user_num)),list(range(self.data.item_num)))
@@ -61,10 +62,18 @@ class DNN_Encoder(nn.Module):
         self.data = data
         self.emb_size = emb_size
         self.tau = temperature
-        self.fc_u1 = nn.Linear(self.emb_size, 1024)
-        self.fc_u2 = nn.Linear(1024, 128)
-        self.fc_i1 = nn.Linear(self.emb_size, 1024)
-        self.fc_i2 = nn.Linear(1024, 128)
+        self.user_tower = nn.Sequential(
+            nn.Linear(self.emb_size, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 128),
+            nn.Sigmoid()
+        )
+        self.item_tower = nn.Sequential(
+            nn.Linear(self.emb_size, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 128),
+            nn.Sigmoid()
+        )
         self.dropout = nn.Dropout(drop_rate)
         initializer = nn.init.xavier_uniform_
         self.initial_user_emb = nn.Parameter(initializer(torch.empty(self.data.user_num, self.emb_size)))
@@ -74,15 +83,8 @@ class DNN_Encoder(nn.Module):
         q_emb = self.initial_user_emb[q]
         i_emb = self.initial_item_emb[x]
 
-        q_emb = self.fc_u1(q_emb)
-        q_emb = torch.relu(q_emb)
-        q_emb = self.fc_u2(q_emb)
-        q_emb = torch.sigmoid(q_emb)
-
-        i_emb = self.fc_i1(i_emb)
-        i_emb = torch.relu(i_emb)
-        i_emb = self.fc_i2(i_emb)
-        i_emb = torch.sigmoid(i_emb)
+        q_emb = self.user_tower(q_emb)
+        i_emb = self.item_tower(i_emb)
 
         return q_emb, i_emb
 
@@ -91,14 +93,8 @@ class DNN_Encoder(nn.Module):
         i1_emb = self.dropout(i_emb)
         i2_emb = self.dropout(i_emb)
 
-        i1_emb = self.fc_i1(i1_emb)
-        i1_emb = torch.relu(i1_emb)
-        i1_emb = self.fc_i2(i1_emb)
-        i1_emb = torch.sigmoid(i1_emb)
-        i2_emb = self.fc_i1(i2_emb)
-        i2_emb = torch.relu(i2_emb)
-        i2_emb = self.fc_i2(i2_emb)
-        i2_emb = torch.sigmoid(i2_emb)
+        i1_emb = self.item_tower(i1_emb)
+        i2_emb = self.item_tower(i2_emb)
 
         return i1_emb, i2_emb
 
