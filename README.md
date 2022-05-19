@@ -22,13 +22,14 @@ This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) 
 </ul>
 
 <h2>Requirements</h2>
-<ul>
-<li>numba==0.53.1</li>
-<li>numpy==1.20.3</li>
-<li>scipy==1.6.2</li>
-<li>tensorflow==1.14.0</li>
-<li>torch==1.7.0</li>
-</ul>
+	
+```
+numba==0.53.1
+numpy==1.20.3
+scipy==1.6.2
+tensorflow==1.14.0
+torch>=1.7.0
+```
 
 <h2>Usage</h2>
 <ol>
