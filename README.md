@@ -46,7 +46,7 @@ torch>=1.7.0
 
    <tr>
     <td scope="row">SimGCL</td>
-        <td>Yu et al. <a href="https://arxiv.org/abs/2112.08679" target="_blank">Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation</a> , SIGIR'22.
+        <td>Yu et al. <a href="https://arxiv.org/abs/2112.08679" target="_blank">Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation</a>, SIGIR'22.
          </td> <td>Graph</d> <td>PyTorch</d> <td>⭐⭐⭐⭐</td>
       </tr>
      <tr>
