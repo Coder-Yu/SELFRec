@@ -64,13 +64,13 @@ class DNN_Encoder(nn.Module):
         self.tau = temperature
         self.user_tower = nn.Sequential(
             nn.Linear(self.emb_size, 1024),
-            nn.ReLU(),
+            nn.ReLU(True),
             nn.Linear(1024, 128),
             nn.Sigmoid()
         )
         self.item_tower = nn.Sequential(
             nn.Linear(self.emb_size, 1024),
-            nn.ReLU(),
+            nn.ReLU(True),
             nn.Linear(1024, 128),
             nn.Sigmoid()
         )

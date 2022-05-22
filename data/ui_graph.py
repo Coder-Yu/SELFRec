@@ -30,10 +30,6 @@ class Interaction(Data,Graph):
         popularity_item = {}
         for u in self.item:
             popularity_item[self.item[u]] = len(self.training_set_i[u])
-        f = open('popularity_user','wb')
-        pickle.dump(popularity_user,f)
-        f = open('popularity_item', 'wb')
-        pickle.dump(popularity_item, f)
 
 
     def __generate_set(self):
