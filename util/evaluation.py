@@ -15,6 +15,17 @@ class Metric(object):
         return hit_count
 
     @staticmethod
+    def hit_ratio(origin, hits):
+        total_num = 0
+        for user in origin:
+            items = list(origin[user].keys())
+            total_num += len(items)
+        hit_num = 0
+        for user in hits:
+            hit_num += hits[user]
+        return hit_num/total_num
+
+    @staticmethod
     def precision(hits, N):
         prec = sum([hits[user] for user in hits])
         return prec / (len(hits) * N)
@@ -116,12 +127,14 @@ def ranking_evaluation(origin, res, N):
             print('The Lengths of test set and predicted set do not match!')
             exit(-1)
         hits = Metric.hits(origin, predicted)
+        hr = Metric.hit_ratio(origin, hits)
+        indicators.append('Hit Ratio:' + str(hr) + '\n')
         prec = Metric.precision(hits, n)
         indicators.append('Precision:' + str(prec) + '\n')
         recall = Metric.recall(hits, origin)
         indicators.append('Recall:' + str(recall) + '\n')
-        F1 = Metric.F1(prec, recall)
-        indicators.append('F1:' + str(F1) + '\n')
+        # F1 = Metric.F1(prec, recall)
+        # indicators.append('F1:' + str(F1) + '\n')
         #MAP = Measure.MAP(origin, predicted, n)
         #indicators.append('MAP:' + str(MAP) + '\n')
         NDCG = Metric.NDCG(origin, predicted, n)
