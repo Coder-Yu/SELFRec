@@ -41,7 +41,7 @@ torch>=1.7.0
 
 <table class="table table-hover table-bordered">
   <tr>
-		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th> <th>SSL Effectiveness</th>
+		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th>
    </tr>
 
    <tr>
