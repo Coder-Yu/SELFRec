@@ -50,6 +50,12 @@ torch>=1.7.0
          </td> <td>Graph</d> <td>PyTorch</d> 
       </tr>
      <tr>
+       <tr>
+    <td scope="row">NCL</td>
+        <td>Lin et al. <a href="https://arxiv.org/abs/2202.06200" target="_blank">Improving Graph Collaborative Filtering with Neighborhood-enriched Contrastive Learning</a>, WWW'22.
+         </td> <td>Graph</d> <td>PyTorch</d> 
+      </tr>
+     <tr>
     <td scope="row">MHCN</td>
         <td>Yu et al. <a href="https://dl.acm.org/doi/abs/10.1145/3442381.3449844" target="_blank">Self-Supervised Multi-Channel Hypergraph Convolutional Network for Social Recommendation</a>, WWW'21.
          </td> <td>Graph</d> <td>TensorFlow</d>
