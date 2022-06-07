@@ -24,12 +24,12 @@ class Interaction(Data,Graph):
         self.ui_adj = self.__create_sparse_bipartite_adjacency()
         self.norm_adj = self.normalize_graph_mat(self.ui_adj)
         self.interaction_mat = self.__create_sparse_interaction_matrix()
-        popularity_user = {}
-        for u in self.user:
-            popularity_user[self.user[u]] = len(self.training_set_u[u])
-        popularity_item = {}
-        for u in self.item:
-            popularity_item[self.item[u]] = len(self.training_set_i[u])
+        # popularity_user = {}
+        # for u in self.user:
+        #     popularity_user[self.user[u]] = len(self.training_set_u[u])
+        # popularity_item = {}
+        # for u in self.item:
+        #     popularity_item[self.item[u]] = len(self.training_set_i[u])
 
 
     def __generate_set(self):
