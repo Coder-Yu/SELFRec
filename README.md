@@ -41,57 +41,56 @@ torch>=1.7.0
 
 <table class="table table-hover table-bordered">
   <tr>
-		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th> <th>SSL Effectiveness</th>
+		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th>
    </tr>
 
    <tr>
     <td scope="row">SimGCL</td>
         <td>Yu et al. <a href="https://arxiv.org/abs/2112.08679" target="_blank">Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation</a>, SIGIR'22.
-         </td> <td>Graph</d> <td>PyTorch</d> <td>⭐⭐⭐⭐</td>
+         </td> <td>Graph</d> <td>PyTorch</d> 
       </tr>
      <tr>
     <td scope="row">MHCN</td>
         <td>Yu et al. <a href="https://dl.acm.org/doi/abs/10.1145/3442381.3449844" target="_blank">Self-Supervised Multi-Channel Hypergraph Convolutional Network for Social Recommendation</a>, WWW'21.
-         </td> <td>Graph</d> <td>TensorFlow</d> <td>⭐⭐</td>
+         </td> <td>Graph</d> <td>TensorFlow</d>
       </tr>
      <tr>	
     <td scope="row">SGL</td>
         <td>Wu et al. <a href="https://dl.acm.org/doi/10.1145/3404835.3462862" target="_blank">Self-supervised Graph Learning for Recommendation</a>, SIGIR'21.
-         </td> <td>Graph</d> <td>TensorFlow</d> <td>⭐⭐⭐</td>
+         </td> <td>Graph</d> <td>TensorFlow</d> 
       </tr>
     <tr>
     <td scope="row">SEPT</td>
         <td>Yu et al. <a href="https://arxiv.org/abs/2106.03569" target="_blank">Socially-Aware Self-supervised Tri-Training for Recommendation</a>, KDD'21.
-         </td> <td>Graph</d> <td>TensorFlow</d> <td>⭐⭐</td>
+         </td> <td>Graph</d> <td>TensorFlow</d> 
       </tr>
           <tr>
     <td scope="row">BUIR</td>
         <td>Lee et al. <a href="https://arxiv.org/abs/2105.06323" target="_blank">Bootstrapping User and Item Representations for One-Class Collaborative Filtering</a>, SIGIR'21.
-         </td> <td>Graph</d> <td>PyTorch</d> <td>⚠️</td>
+         </td> <td>Graph</d> <td>PyTorch</d>
       </tr>
         <tr>
     <td scope="row">SSL4Rec</td>
         <td>Yao et al. <a href="https://dl.acm.org/doi/abs/10.1145/3459637.3481952" target="_blank">Self-supervised Learning for Large-scale Item Recommendations</a>, CIKM'21.
-	     </td> <td>Graph</d>  <td>PyTorch</d> <td>❔</td>
+	     </td> <td>Graph</d>  <td>PyTorch</d>
       </tr>
     <tr>
     <td scope="row">SelfCF</td>
         <td>Zhou et al. <a href="https://arxiv.org/abs/2107.03019" target="_blank">SelfCF: A Simple Framework for Self-supervised Collaborative Filtering</a>, arXiv'21.
-         </td> <td>Graph</d> <td>PyTorch</d> <td>❔</td>
+         </td> <td>Graph</d> <td>PyTorch</d>
       </tr>
     <tr>
     <td scope="row">LightGCN</td>
         <td>He et al. <a href="https://dl.acm.org/doi/10.1145/3397271.3401063" target="_blank">LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation</a>, SIGIR'20.
-	     </td> <td>Graph</d>  <td>PyTorch</d> <td>N/A</td>
+	     </td> <td>Graph</d>  <td>PyTorch</d>
       </tr>
          <tr>
     <td scope="row">MF</td>
         <td>Yehuda et al. <a href="https://ieeexplore.ieee.org/abstract/document/5197422" target="_blank">Matrix Factorization Techniques for Recommender Systems</a>, IEEE Computer'09.
-	     </td> <td>Graph</d>  <td>PyTorch</d> <td>N/A</td>
+	     </td> <td>Graph</d>  <td>PyTorch</d> 
       </tr>
-  </table>
-  
-**Note:** For those methods which have released official codes but cannot be successfully reproduced as reported, we label them with ⚠️. For those methods which are without official codes and currently cannot be reproduced as reported, we label them with ❔. For those effective methods, the more performance improvement SSL brings, the more ⭐ the corresponding method wins.
+  </table>  
+
 
 <h2>Implement Your Model</h2>
  
