@@ -12,7 +12,6 @@ class GraphRecommender(Recommender):
     def __init__(self, conf, training_set, test_set, **kwargs):
         super(GraphRecommender, self).__init__(conf, training_set, test_set, **kwargs)
         self.data = Interaction(conf, training_set, test_set)
-        self.batch_size = int(self.config['batch_size'])
         self.bestPerformance = []
         top = self.ranking['-topN'].split(',')
         self.topN = [int(num) for num in top]

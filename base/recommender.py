@@ -13,6 +13,7 @@ class Recommender(object):
         self.ranking = OptionConf(self.config['item.ranking'])
         self.emb_size = int(self.config['embbedding.size'])
         self.maxEpoch = int(self.config['num.max.epoch'])
+        self.batch_size = int(self.config['batch_size'])
         self.lRate = float(self.config['learnRate'])
         self.reg = float(self.config['reg.lambda'])
         self.output = OptionConf(self.config['output.setup'])
@@ -27,19 +28,13 @@ class Recommender(object):
             self.model_log.add(k + '=' + self.config[k])
 
     def print_model_info(self):
-        if self.config.contain(self.config['model.name']):
-            par_str = ''
-            args = OptionConf(self.config[self.config['model.name']])
-            for key in args.keys():
-                par_str += key[1:] + ':' + args[key] + '  '
-            print('Specific Parameters:', par_str)
-            print('=' * 80)
         print('Model:', self.config['model.name'])
         print('Training Set:', abspath(self.config['training.set']))
         print('Test Set:', abspath(self.config['test.set']))
         print('Embedding Dimension:', self.emb_size)
         print('Maximum Epoch:', self.maxEpoch)
         print('Learning Rate:', self.lRate)
+        print('Batch Size:', self.batch_size)
         print('Regularization Parameter: reg %.4f' % self.reg)
         parStr = ''
         if self.config.contain(self.config['model.name']):

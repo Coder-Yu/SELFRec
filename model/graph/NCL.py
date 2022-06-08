@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
 from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
@@ -55,14 +56,30 @@ class NCL(GraphRecommender):
         return proto_nce_loss
 
     def ssl_layer_loss(self, context_emb, initial_emb, user, item):
-        context_user_emb, context_item_emb = torch.split(context_emb, [self.data.user_num, self.data.item_num])
-        initial_user_emb, initial_item_emb = torch.split(initial_emb, [self.data.user_num, self.data.item_num])
-        context_user_emb = context_user_emb[user]
-        initial_user_emb = initial_user_emb[user]
-        ssl_loss_user = InfoNCE(context_user_emb,initial_user_emb,self.ssl_temp)
-        context_item_emb = context_item_emb[item]
-        initial_item_emb = initial_item_emb[item]
-        ssl_loss_item = InfoNCE(context_item_emb,initial_item_emb,self.ssl_temp)
+        context_user_emb_all, context_item_emb_all = torch.split(context_emb, [self.data.user_num, self.data.item_num])
+        initial_user_emb_all, initial_item_emb_all = torch.split(initial_emb, [self.data.user_num, self.data.item_num])
+        context_user_emb = context_user_emb_all[user]
+        initial_user_emb = initial_user_emb_all[user]
+        norm_user_emb1 = F.normalize(context_user_emb)
+        norm_user_emb2 = F.normalize(initial_user_emb)
+        norm_all_user_emb = F.normalize(initial_user_emb_all)
+        pos_score_user = torch.mul(norm_user_emb1, norm_user_emb2).sum(dim=1)
+        ttl_score_user = torch.matmul(norm_user_emb1, norm_all_user_emb.transpose(0, 1))
+        pos_score_user = torch.exp(pos_score_user / self.ssl_temp)
+        ttl_score_user = torch.exp(ttl_score_user / self.ssl_temp).sum(dim=1)
+        ssl_loss_user = -torch.log(pos_score_user / ttl_score_user).sum()
+
+        context_item_emb = context_item_emb_all[item]
+        initial_item_emb = initial_item_emb_all[item]
+        norm_item_emb1 = F.normalize(context_item_emb)
+        norm_item_emb2 = F.normalize(initial_item_emb)
+        norm_all_item_emb = F.normalize(initial_item_emb_all)
+        pos_score_item = torch.mul(norm_item_emb1, norm_item_emb2).sum(dim=1)
+        ttl_score_item = torch.matmul(norm_item_emb1, norm_all_item_emb.transpose(0, 1))
+        pos_score_item = torch.exp(pos_score_item / self.ssl_temp)
+        ttl_score_item = torch.exp(ttl_score_item / self.ssl_temp).sum(dim=1)
+        ssl_loss_item = -torch.log(pos_score_item / ttl_score_item).sum()
+
         ssl_loss = self.ssl_reg * (ssl_loss_user + self.alpha * ssl_loss_item)
         return ssl_loss
 
