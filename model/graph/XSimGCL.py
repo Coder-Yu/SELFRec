@@ -16,8 +16,9 @@ class XSimGCL(GraphRecommender):
         args = OptionConf(self.config['XSimGCL'])
         self.cl_rate = float(args['-lambda'])
         self.eps = float(args['-eps'])
+        self.temp = float(args['-tau'])
         self.n_layers = int(args['-n_layer'])
-        self.model = SimGCL_Encoder(self.data, self.emb_size, self.eps, self.n_layers)
+        self.model = SimGCL_Encoder(self.data, self.emb_size, self.eps, self.temp, self.n_layers)
 
     def train(self):
         model = self.model.cuda()
@@ -54,12 +55,13 @@ class XSimGCL(GraphRecommender):
 
 
 class SimGCL_Encoder(nn.Module):
-    def __init__(self, data, emb_size, eps, n_layers):
+    def __init__(self, data, emb_size, eps, tau, n_layers):
         super(SimGCL_Encoder, self).__init__()
         self.data = data
         self.eps = eps
         self.emb_size = emb_size
         self.n_layers = n_layers
+        self.tau = tau
         self.norm_adj = data.norm_adj
         self.embedding_dict = self._init_model()
         self.sparse_norm_adj = TorchGraphInterface.convert_sparse_mat_to_tensor(self.norm_adj).cuda()
@@ -95,6 +97,6 @@ class SimGCL_Encoder(nn.Module):
     def cal_cl_loss(self, idx,user_view1,user_view2,item_view1,item_view2):
         u_idx = torch.unique(torch.Tensor(idx[0]).type(torch.long)).cuda()
         i_idx = torch.unique(torch.Tensor(idx[1]).type(torch.long)).cuda()
-        user_cl_loss = InfoNCE(user_view1[u_idx], user_view2[u_idx], 0.15)
-        item_cl_loss = InfoNCE(item_view1[i_idx], item_view2[i_idx], 0.15)
+        user_cl_loss = InfoNCE(user_view1[u_idx], user_view2[u_idx], self.tau)
+        item_cl_loss = InfoNCE(item_view1[i_idx], item_view2[i_idx], self.tau)
         return user_cl_loss + item_cl_loss
