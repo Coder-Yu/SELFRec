@@ -188,7 +188,8 @@ class SGL(GraphRecommender):
                         })
 
                 _, l, rec_l, ssl_l = self.sess.run([train, total_loss, rec_loss, ssl_loss], feed_dict=feed_dict)
-                print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_l, 'ssl_loss', ssl_l)
+                if n % 100 == 0:
+                    print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_l, 'ssl_loss', ssl_l)
             self.U, self.V = self.sess.run([self.main_user_embeddings, self.main_item_embeddings])
             self.fast_evaluation(epoch)
         self.U, self.V = self.best_user_emb, self.best_item_emb
