@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
 from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
-from base.torch_interface import TorchGraphInterface
+from model.graph.LightGCN import LGCN_Encoder
 
 
 # SELFCF: A Simple Framework for Self-supervised Collaborative Filtering
@@ -63,23 +63,23 @@ class SelfCF_HE(nn.Module):
         self.i_target_his = torch.randn((self.item_count, self.latent_size), requires_grad=False).cuda()
 
     def forward(self, inputs):
-        u_online, i_online = self.online_encoder(inputs)
+        u_online, i_online = self.online_encoder()
         with torch.no_grad():
             users, items = inputs['user'], inputs['item']
             u_target, i_target = self.u_target_his.clone()[users], self.i_target_his.clone()[items]
             u_target.detach()
             i_target.detach()
             #
-            u_target = u_target * self.momentum + u_online.data * (1. - self.momentum)
-            i_target = i_target * self.momentum + i_online.data * (1. - self.momentum)
+            u_target = u_target * self.momentum + u_online[users].data * (1. - self.momentum)
+            i_target = i_target * self.momentum + i_online[items].data * (1. - self.momentum)
             #
-            self.u_target_his[users, :] = u_online.clone()
-            self.i_target_his[items, :] = i_online.clone()
-        return self.predictor(u_online), u_target, self.predictor(i_online), i_target
+            self.u_target_his[users, :] = u_online[users].clone()
+            self.i_target_his[items, :] = i_online[items].clone()
+        return self.predictor(u_online[users]), u_target, self.predictor(i_online[items]), i_target
 
     @torch.no_grad()
     def get_embedding(self):
-        u_online, i_online = self.online_encoder.get_embedding()
+        u_online, i_online = self.online_encoder.forward()
         return self.predictor(u_online), u_online, self.predictor(i_online), i_online
 
     def loss_fn(self, p, z):  # negative cosine similarity
@@ -90,52 +90,3 @@ class SelfCF_HE(nn.Module):
         loss_ui = self.loss_fn(u_online, i_target)/2
         loss_iu = self.loss_fn(i_online, u_target)/2
         return loss_ui + loss_iu
-
-
-class LGCN_Encoder(nn.Module):
-    def __init__(self, data, emb_size, n_layers):
-        super(LGCN_Encoder, self).__init__()
-        self.data = data
-        self.latent_size = emb_size
-        self.layers = n_layers
-        self.norm_adj = data.norm_adj
-        self.embedding_dict = self._init_model()
-        self.sparse_norm_adj = TorchGraphInterface.convert_sparse_mat_to_tensor(self.norm_adj).cuda()
-
-    def _init_model(self):
-        initializer = nn.init.xavier_uniform_
-        embedding_dict = nn.ParameterDict({
-            'user_emb': nn.Parameter(initializer(torch.empty(self.data.user_num, self.latent_size))),
-            'item_emb': nn.Parameter(initializer(torch.empty(self.data.item_num, self.latent_size))),
-        })
-        return embedding_dict
-
-    def forward(self, inputs):
-        A_hat =  self.sparse_norm_adj
-        ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
-        all_embeddings = [ego_embeddings]
-        for k in range(self.layers):
-            ego_embeddings = torch.sparse.mm(A_hat, ego_embeddings)
-            all_embeddings += [ego_embeddings]
-        all_embeddings = torch.stack(all_embeddings, dim=1)
-        all_embeddings = torch.mean(all_embeddings, dim=1)
-        user_all_embeddings = all_embeddings[:self.data.user_num]
-        item_all_embeddings = all_embeddings[self.data.user_num:]
-        users, items = inputs['user'], inputs['item']
-        user_embeddings = user_all_embeddings[users]
-        item_embeddings = item_all_embeddings[items]
-        return user_embeddings, item_embeddings
-
-    @torch.no_grad()
-    def get_embedding(self):
-        A_hat = self.sparse_norm_adj
-        ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
-        all_embeddings = [ego_embeddings]
-        for k in range(self.layers):
-            ego_embeddings = torch.sparse.mm(A_hat, ego_embeddings)
-            all_embeddings += [ego_embeddings]
-        all_embeddings = torch.stack(all_embeddings, dim=1)
-        all_embeddings = torch.mean(all_embeddings, dim=1)
-        user_all_embeddings = all_embeddings[:self.data.user_num]
-        item_all_embeddings = all_embeddings[self.data.user_num:]
-        return user_all_embeddings, item_all_embeddings

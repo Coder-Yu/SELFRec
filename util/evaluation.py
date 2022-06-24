@@ -16,6 +16,10 @@ class Metric(object):
 
     @staticmethod
     def hit_ratio(origin, hits):
+        """
+        Note: This type of hit ratio calculates the fraction:
+         (# retrieved interactions in the test set / #all the interactions in the test set)
+        """
         total_num = 0
         for user in origin:
             items = list(origin[user].keys())
@@ -24,6 +28,18 @@ class Metric(object):
         for user in hits:
             hit_num += hits[user]
         return hit_num/total_num
+
+    # # @staticmethod
+    # def hit_ratio(origin, hits):
+    #     """
+    #     Note: This type of hit ratio calculates the fraction:
+    #      (# users who are recommended items in the test set / #all the users in the test set)
+    #     """
+    #     hit_num = 0
+    #     for user in hits:
+    #         if hits[user] > 0:
+    #             hit_num += 1
+    #     return hit_num / len(origin)
 
     @staticmethod
     def precision(hits, N):
