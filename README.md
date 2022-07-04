@@ -67,7 +67,7 @@ torch>=1.7.0
      <tr>	
     <td scope="row">SGL</td>
         <td>Wu et al. <a href="https://dl.acm.org/doi/10.1145/3404835.3462862" target="_blank">Self-supervised Graph Learning for Recommendation</a>, SIGIR'21.
-         </td> <td>Graph</d> <td>TensorFlow</d> 
+         </td> <td>Graph</d> <td>TensorFlow & Torch</d> 
       </tr>
     <tr>
     <td scope="row">SEPT</td>
