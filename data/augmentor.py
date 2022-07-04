@@ -1,7 +1,6 @@
 import numpy as np
 import random
 import scipy.sparse as sp
-import torch
 
 class GraphAugmentor(object):
     def __init__(self):
