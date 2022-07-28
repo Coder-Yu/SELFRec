@@ -48,10 +48,10 @@ class NCL(GraphRecommender):
         user_emb, item_emb = torch.split(initial_emb, [self.data.user_num, self.data.item_num])
         user2cluster = self.user_2cluster[user_idx]
         user2centroids = self.user_centroids[user2cluster]
-        proto_nce_loss_user = InfoNCE(user_emb[user_idx],user2centroids,self.ssl_temp)
+        proto_nce_loss_user = InfoNCE(user_emb[user_idx],user2centroids,self.ssl_temp) * self.batch_size
         item2cluster = self.item_2cluster[item_idx]
         item2centroids = self.item_centroids[item2cluster]
-        proto_nce_loss_item = InfoNCE(item_emb[item_idx],item2centroids,self.ssl_temp)
+        proto_nce_loss_item = InfoNCE(item_emb[item_idx],item2centroids,self.ssl_temp) * self.batch_size
         proto_nce_loss = self.proto_reg * (proto_nce_loss_user + proto_nce_loss_item)
         return proto_nce_loss
 
@@ -98,7 +98,7 @@ class NCL(GraphRecommender):
                 initial_emb = emb_list[0]
                 context_emb = emb_list[self.hyper_layers*2]
                 ssl_loss = self.ssl_layer_loss(context_emb,initial_emb,user_idx,pos_idx)
-                warm_up_loss = rec_loss + l2_reg_loss(self.reg, user_emb, pos_item_emb) + ssl_loss
+                warm_up_loss = rec_loss + l2_reg_loss(self.reg, user_emb, pos_item_emb, neg_item_emb) / self.batch_size + ssl_loss
 
                 if epoch<20: #warm_up
                     optimizer.zero_grad()
@@ -109,7 +109,7 @@ class NCL(GraphRecommender):
                 else:
                     # Backward and optimize
                     proto_loss = self.ProtoNCE_loss(initial_emb, user_idx, pos_idx)
-                    batch_loss = rec_loss + l2_reg_loss(self.reg, user_emb, pos_item_emb) + ssl_loss + proto_loss
+                    batch_loss = rec_loss + l2_reg_loss(self.reg, user_emb, pos_item_emb, neg_item_emb) / self.batch_size + ssl_loss + proto_loss
                     optimizer.zero_grad()
                     batch_loss.backward()
                     optimizer.step()
