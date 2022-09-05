@@ -25,11 +25,10 @@ class SimGCL(GraphRecommender):
         for epoch in range(self.maxEpoch):
             for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size)):
                 user_idx, pos_idx, neg_idx = batch
-                model.train()
                 rec_user_emb, rec_item_emb = model()
                 user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx], rec_item_emb[pos_idx], rec_item_emb[neg_idx]
                 rec_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb)
-                cl_loss = self.cl_rate * model.cal_cl_loss([user_idx,pos_idx])
+                cl_loss = self.cl_rate * self.cal_cl_loss([user_idx,pos_idx])
                 batch_loss =  rec_loss + l2_reg_loss(self.reg, user_emb, pos_item_emb) + cl_loss
                 # Backward and optimize
                 optimizer.zero_grad()
@@ -37,11 +36,19 @@ class SimGCL(GraphRecommender):
                 optimizer.step()
                 if n % 100==0:
                     print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_loss.item(), 'cl_loss', cl_loss.item())
-            model.eval()
             with torch.no_grad():
                 self.user_emb, self.item_emb = self.model()
             self.fast_evaluation(epoch)
         self.user_emb, self.item_emb = self.best_user_emb, self.best_item_emb
+
+    def cal_cl_loss(self, idx):
+        u_idx = torch.unique(torch.Tensor(idx[0]).type(torch.long)).cuda()
+        i_idx = torch.unique(torch.Tensor(idx[1]).type(torch.long)).cuda()
+        user_view_1, item_view_1 = self.model(perturbed=True)
+        user_view_2, item_view_2 = self.model(perturbed=True)
+        user_cl_loss = InfoNCE(user_view_1[u_idx], user_view_2[u_idx], 0.2)
+        item_cl_loss = InfoNCE(item_view_1[i_idx], item_view_2[i_idx], 0.2)
+        return user_cl_loss + item_cl_loss
 
     def save(self):
         with torch.no_grad():
@@ -85,12 +92,3 @@ class SimGCL_Encoder(nn.Module):
         all_embeddings = torch.mean(all_embeddings, dim=1)
         user_all_embeddings, item_all_embeddings = torch.split(all_embeddings, [self.data.user_num, self.data.item_num])
         return user_all_embeddings, item_all_embeddings
-
-    def cal_cl_loss(self, idx):
-        u_idx = torch.unique(torch.Tensor(idx[0]).type(torch.long)).cuda()
-        i_idx = torch.unique(torch.Tensor(idx[1]).type(torch.long)).cuda()
-        user_view_1, item_view_1 = self.forward(perturbed=True)
-        user_view_2, item_view_2 = self.forward(perturbed=True)
-        user_cl_loss = InfoNCE(user_view_1[u_idx], user_view_2[u_idx], 0.2)
-        item_cl_loss = InfoNCE(item_view_1[i_idx], item_view_2[i_idx], 0.2)
-        return user_cl_loss + item_cl_loss

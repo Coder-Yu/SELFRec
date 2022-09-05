@@ -16,7 +16,6 @@ class MF(GraphRecommender):
         for epoch in range(self.maxEpoch):
             for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size)):
                 user_idx, pos_idx, neg_idx = batch
-                model.train()
                 rec_user_emb, rec_item_emb = model()
                 user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx], rec_item_emb[pos_idx], rec_item_emb[neg_idx]
                 batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, user_emb,pos_item_emb)
@@ -26,7 +25,6 @@ class MF(GraphRecommender):
                 optimizer.step()
                 if n % 100 == 0:
                     print('training:', epoch + 1, 'batch', n, 'batch_loss:', batch_loss.item())
-            model.eval()
             with torch.no_grad():
                 self.user_emb, self.item_emb = self.model()
             if epoch % 5 == 0:

@@ -45,7 +45,7 @@ torch>=1.7.0
    </tr>
    <tr>
     <td scope="row">XSimGCL</td>
-        <td>Yu et al. <a href="" target="_blank">Towards Extremely Simple Graph Contrastive Learning for Recommendation</a>, To be submitted.
+        <td>Yu et al. <a href="https://www.researchgate.net/publication/363272067" target="_blank">XSimGCL: Towards Extremely Simple Graph Contrastive Learning for Recommendation</a>, Submitted to TKDE.
          </td> <td>Graph</d> <td>PyTorch</d> 
       </tr>
    <tr>
