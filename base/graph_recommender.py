@@ -110,7 +110,7 @@ class GraphRecommender(Recommender):
                 self.bestPerformance.append(performance)
             self.save()
         print('-' * 120)
-        print('Quick Ranking Performance ' + ' (Top-' + str(self.max_N) + ' Item Recommendation)')
+        print('Real-Time Ranking Performance ' + ' (Top-' + str(self.max_N) + ' Item Recommendation)')
         measure = [m.strip() for m in measure[1:]]
         print('*Current Performance*')
         print('Epoch:', str(epoch + 1) + ',', ' | '.join(measure))

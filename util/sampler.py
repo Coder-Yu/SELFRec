@@ -1,7 +1,7 @@
 from random import shuffle,randint,choice
 
 
-def next_batch_pairwise(data,batch_size):
+def next_batch_pairwise(data,batch_size,n_negs=1):
     training_data = data.training_data
     shuffle(training_data)
     batch_id = 0
@@ -20,10 +20,11 @@ def next_batch_pairwise(data,batch_size):
         for i, user in enumerate(users):
             i_idx.append(data.item[items[i]])
             u_idx.append(data.user[user])
-            neg_item = choice(item_list)
-            while neg_item in data.training_set_u[user]:
+            for m in range(n_negs):
                 neg_item = choice(item_list)
-            j_idx.append(data.item[neg_item])
+                while neg_item in data.training_set_u[user]:
+                    neg_item = choice(item_list)
+                j_idx.append(data.item[neg_item])
         yield u_idx, i_idx, j_idx
 
 

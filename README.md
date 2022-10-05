@@ -45,7 +45,7 @@ torch>=1.7.0
    </tr>
    <tr>
     <td scope="row">XSimGCL</td>
-        <td>Yu et al. <a href="https://www.researchgate.net/publication/363272067" target="_blank">XSimGCL: Towards Extremely Simple Graph Contrastive Learning for Recommendation</a>, Submitted to TKDE.
+        <td>Yu et al. <a href="https://arxiv.org/abs/2209.02544" target="_blank">XSimGCL: Towards Extremely Simple Graph Contrastive Learning for Recommendation</a>, Submitted to TKDE.
          </td> <td>Graph</d> <td>PyTorch</d> 
       </tr>
    <tr>
@@ -54,6 +54,13 @@ torch>=1.7.0
          </td> <td>Graph</d> <td>PyTorch</d> 
       </tr>
      <tr>
+   <tr>
+    <td scope="row">MixGCF</td>
+        <td>Huang et al. <a href="https://keg.cs.tsinghua.edu.cn/jietang/publications/KDD21-Huang-et-al-MixGCF.pdf" target="_blank">MixGCF: An Improved Training Method for Graph Neural
+Network-based Recommender Systems</a>, KDD'21.
+         </td> <td>Graph</d> <td>PyTorch</d> 
+      </tr>
+   <tr>
        <tr>
     <td scope="row">NCL</td>
         <td>Lin et al. <a href="https://arxiv.org/abs/2202.06200" target="_blank">Improving Graph Collaborative Filtering with Neighborhood-enriched Contrastive Learning</a>, WWW'22.

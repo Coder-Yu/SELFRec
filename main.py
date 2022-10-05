@@ -4,7 +4,7 @@ from util.conf import ModelConf
 if __name__ == '__main__':
     # Register your model here
     baseline = ['LightGCN','MF']
-    graph_models = ['SGL', 'SimGCL', 'SEPT', 'MHCN', 'BUIR', 'SelfCF', 'SSL4Rec', 'XSimGCL', 'NCL']
+    graph_models = ['SGL', 'SimGCL', 'SEPT', 'MHCN', 'BUIR', 'SelfCF', 'SSL4Rec', 'XSimGCL', 'NCL','MixGCF']
     sequential_models = []
 
     print('=' * 80)
