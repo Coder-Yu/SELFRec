@@ -78,9 +78,9 @@ class MixGCF_Encoder(nn.Module):
         ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
         user_embs = [self.embedding_dict['user_emb']]
         item_embs = [ self.embedding_dict['item_emb']]
+        #adj = self._sparse_dropout(self.sparse_norm_adj, 0.2)
         for k in range(self.layers):
-            adj = self._sparse_dropout(self.sparse_norm_adj,0.2)
-            ego_embeddings = torch.sparse.mm(adj, ego_embeddings)
+            ego_embeddings = torch.sparse.mm(self.sparse_norm_adj, ego_embeddings)
             ego_embeddings = self.dropout(ego_embeddings)
             user_embs.append(ego_embeddings[:self.data.user_num])
             item_embs.append(ego_embeddings[self.data.user_num:])
