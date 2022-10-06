@@ -25,7 +25,7 @@ class MixGCF(GraphRecommender):
             for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size,self.n_negs)):
                 user_idx, pos_idx, neg_idx = batch
                 user_emb, pos_item_emb, neg_item_emb = model.negative_mixup(user_idx,pos_idx,neg_idx)
-                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, user_emb,pos_item_emb)
+                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, user_emb,pos_item_emb,neg_item_emb)
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()
@@ -73,9 +73,9 @@ class MixGCF_Encoder(nn.Module):
         ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
         user_embs = [self.embedding_dict['user_emb']]
         item_embs = [ self.embedding_dict['item_emb']]
-        adj = self._sparse_dropout(self.sparse_norm_adj, 0.5)
+        #adj = self._sparse_dropout(self.sparse_norm_adj, 0.5)
         for k in range(self.layers):
-            ego_embeddings = torch.sparse.mm(adj, ego_embeddings)
+            ego_embeddings = torch.sparse.mm(self.sparse_norm_adj, ego_embeddings)
             ego_embeddings = self.dropout(ego_embeddings)
             user_embs.append(ego_embeddings[:self.data.user_num])
             item_embs.append(ego_embeddings[self.data.user_num:])
