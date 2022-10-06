@@ -8,12 +8,7 @@ from util.loss_torch import bpr_loss,l2_reg_loss
 
 # paper: MixGCF: An Improved Training Method for Graph Neural Network-based Recommender Systems. KDD'21
 
-'''
-Note:
-
-The backbone is LightGCN due to its better performance
-
-'''
+#Note: The backbone is LightGCN due to its better performance
 
 class MixGCF(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
@@ -78,9 +73,9 @@ class MixGCF_Encoder(nn.Module):
         ego_embeddings = torch.cat([self.embedding_dict['user_emb'], self.embedding_dict['item_emb']], 0)
         user_embs = [self.embedding_dict['user_emb']]
         item_embs = [ self.embedding_dict['item_emb']]
-        #adj = self._sparse_dropout(self.sparse_norm_adj, 0.2)
+        adj = self._sparse_dropout(self.sparse_norm_adj, 0.5)
         for k in range(self.layers):
-            ego_embeddings = torch.sparse.mm(self.sparse_norm_adj, ego_embeddings)
+            ego_embeddings = torch.sparse.mm(adj, ego_embeddings)
             ego_embeddings = self.dropout(ego_embeddings)
             user_embs.append(ego_embeddings[:self.data.user_num])
             item_embs.append(ego_embeddings[self.data.user_num:])
