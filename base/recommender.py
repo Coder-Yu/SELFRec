@@ -35,7 +35,7 @@ class Recommender(object):
         print('Maximum Epoch:', self.maxEpoch)
         print('Learning Rate:', self.lRate)
         print('Batch Size:', self.batch_size)
-        print('Regularization Parameter: reg %.4f' % self.reg)
+        print('Regularization Parameter:',  self.reg)
         parStr = ''
         if self.config.contain(self.config['model.name']):
             args = OptionConf(self.config[self.config['model.name']])
