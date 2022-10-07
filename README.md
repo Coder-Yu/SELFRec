@@ -107,9 +107,10 @@ Network-based Recommender Systems</a>, KDD'21.
          <tr>
     <td scope="row">MF</td>
         <td>Yehuda et al. <a href="https://ieeexplore.ieee.org/abstract/document/5197422" target="_blank">Matrix Factorization Techniques for Recommender Systems</a>, IEEE Computer'09.
-	     </td> <td>-</d>  <td>PyTorch</d> 
+	     </td> <td>Graph</d>  <td>PyTorch</d> 
       </tr>
   </table>  
+* CL is short for contrastive learning (including data augmentation); DA is short for data augmentation only
 
 <h2>Leaderboard</h2>
 The results are obtained on the dataset of Yelp2018. We performed grid search for the best hyperparameters. <br>
