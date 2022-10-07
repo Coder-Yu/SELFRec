@@ -53,17 +53,20 @@ torch>=1.7.0
         <td>Yu et al. <a href="https://arxiv.org/abs/2112.08679" target="_blank">Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation</a>, SIGIR'22.
          </td> <td>Graph</d> <td>PyTorch</d> 
       </tr>
-     <tr>
+   <tr>
+    <td scope="row">DirectAU</td>
+        <td>Wang et al. <a href="https://arxiv.org/abs/2206.12811" target="_blank">Towards Representation Alignment and Uniformity in Collaborative Filtering</a>, KDD'22.
+         </td> <td>Graph</d> <td>PyTorch</d> 
+      </tr>   
+<tr>
+    <td scope="row">NCL</td>
+        <td>Lin et al. <a href="https://arxiv.org/abs/2202.06200" target="_blank">Improving Graph Collaborative Filtering with Neighborhood-enriched Contrastive Learning</a>, WWW'22.
+         </td> <td>Graph</d> <td>PyTorch</d> 
+      </tr>
    <tr>
     <td scope="row">MixGCF</td>
         <td>Huang et al. <a href="https://keg.cs.tsinghua.edu.cn/jietang/publications/KDD21-Huang-et-al-MixGCF.pdf" target="_blank">MixGCF: An Improved Training Method for Graph Neural
 Network-based Recommender Systems</a>, KDD'21.
-         </td> <td>Graph</d> <td>PyTorch</d> 
-      </tr>
-   <tr>
-       <tr>
-    <td scope="row">NCL</td>
-        <td>Lin et al. <a href="https://arxiv.org/abs/2202.06200" target="_blank">Improving Graph Collaborative Filtering with Neighborhood-enriched Contrastive Learning</a>, WWW'22.
          </td> <td>Graph</d> <td>PyTorch</d> 
       </tr>
      <tr>
