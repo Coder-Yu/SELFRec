@@ -111,6 +111,18 @@ Network-based Recommender Systems</a>, KDD'21.
       </tr>
   </table>  
 
+<h2>Leaderboard</h2>
+The results are obtained on the dataset of Yelp2018. <br>
+General hyperparameter settings are: batch size: 2046, embedding size: 64, learning rate: 0.001, L2 regularization: 0.0001.
+
+|  Model   |           Performance            | Hyperparameter settings                                                                       |
+|:--------:|:--------------------------------:|:----------------------------------------------------------------------------------------------|
+|   NCL    | Recall@20=0.0670, NDCG@20=0.0562 | layer=3, ssl_reg=1e-6, proto_reg=1e-7, tau=0.05, hyper_layers=1, alpha=1.5, num_clusters=2000 |
+|   SGL    | Recall@20=0.0675, NDCG@20=0.0555 | λ=0.1, ρ=0.1, tau=0.2 layer=3                                                                 |
+|  MixGCF  | Recall@20=0.0691, NDCG@20=0.0577 | layer=3, n_nes=64                                                                             |
+| DirectAU | Recall@20=0.0693, NDCG@20=0.0581 | 𝛾=2, layer=3                                                                                 |
+|  SimGCL  | Recall@20=0.0721, NDCG@20=0.0601 | λ=0.5, eps=0.1, tau=0.2 layer=3                                                               |
+| XSimGCL  | Recall@20=0.0723, NDCG@20=0.0604 | λ=0.2, eps=0.2, l∗=1 tau=0.15 layer=3                                                         |
 
 <h2>Implement Your Model</h2>
  
