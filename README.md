@@ -119,6 +119,7 @@ General hyperparameter settings are: batch_size: 2048, emb_size: 64, learning ra
 
 |  Model   |      Recall@20      | NDCG@20 | Hyperparameter settings                                                                             |
 |:--------:|:-------------------:|:-------:|:----------------------------------------------------------------------------------------------------|
+|   LightGCN    |       0.0639        | 0.0525  |     layer=3     |
 |   NCL    |       0.0670        | 0.0562  | layer=3, ssl_reg=1e-6, proto_reg=1e-7, tau=0.05, hyper_layers=1, alpha=1.5, num_clusters=2000 |
 |   SGL    |       0.0675        | 0.0555  |     λ=0.1, ρ=0.1, tau=0.2 layer=3     |
 |  MixGCF  |       0.0691        | 0.0577  |      layer=3, n_nes=64, layer=3       |
