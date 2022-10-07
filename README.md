@@ -113,7 +113,7 @@ Network-based Recommender Systems</a>, KDD'21.
 
 <h2>Leaderboard</h2>
 The results are obtained on the dataset of Yelp2018. We performed grid search for the best hyperparameters. <br>
-General hyperparameter settings are: batch size: 2046, embedding size: 64, learning rate: 0.001, L2 regularization: 0.0001.
+General hyperparameter settings are: batch_size: 2046, embed_size: 64, learning rate: 0.001, L2 regularization: 0.0001.
 
 |  Model   |           Performance            | Hyperparameter settings                                                                             |
 |:--------:|:--------------------------------:|:----------------------------------------------------------------------------------------------------|
