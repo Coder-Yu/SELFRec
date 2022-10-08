@@ -23,7 +23,7 @@ class DirectAU(GraphRecommender):
                 user_idx, pos_idx, neg_idx = batch
                 rec_user_emb, rec_item_emb = model()
                 user_emb, pos_item_emb = rec_user_emb[user_idx], rec_item_emb[pos_idx]
-                batch_loss = self.calculate_loss(user_emb, pos_item_emb)+ l2_reg_loss(self.reg, user_emb,pos_item_emb)
+                batch_loss = self.calculate_loss(user_emb, pos_item_emb)+ l2_reg_loss(self.reg, user_emb,pos_item_emb)/self.batch_size
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()

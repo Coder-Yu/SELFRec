@@ -98,7 +98,7 @@ class NCL(GraphRecommender):
                 initial_emb = emb_list[0]
                 context_emb = emb_list[self.hyper_layers*2]
                 ssl_loss = self.ssl_layer_loss(context_emb,initial_emb,user_idx,pos_idx)
-                warm_up_loss = rec_loss + l2_reg_loss(self.reg, user_emb, pos_item_emb, neg_item_emb)  + ssl_loss
+                warm_up_loss = rec_loss + l2_reg_loss(self.reg, user_emb, pos_item_emb, neg_item_emb)/self.batch_size  + ssl_loss
 
                 if epoch<20: #warm_up
                     optimizer.zero_grad()

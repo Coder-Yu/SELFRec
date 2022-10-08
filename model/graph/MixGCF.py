@@ -25,7 +25,7 @@ class MixGCF(GraphRecommender):
             for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size,self.n_negs)):
                 user_idx, pos_idx, neg_idx = batch
                 user_emb, pos_item_emb, neg_item_emb = model.negative_mixup(user_idx,pos_idx,neg_idx)
-                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, user_emb,pos_item_emb,neg_item_emb)
+                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, user_emb,pos_item_emb,neg_item_emb)/self.batch_size
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()
