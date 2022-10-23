@@ -8,6 +8,11 @@ def bpr_loss(user_emb, pos_item_emb, neg_item_emb):
     loss = -torch.log(10e-8 + torch.sigmoid(pos_score - neg_score))
     return torch.mean(loss)
 
+def triplet_loss(user_emb, pos_item_emb, neg_item_emb):
+    pos_score = torch.mul(user_emb, pos_item_emb).sum(dim=1)
+    neg_score = torch.mul(user_emb, neg_item_emb).sum(dim=1)
+    loss = F.relu(neg_score+1-pos_score)
+    return torch.mean(loss)
 
 def l2_reg_loss(reg, *args):
     emb_loss = 0
