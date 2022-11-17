@@ -90,9 +90,9 @@ class Metric(object):
             #1 = related, 0 = unrelated
             for n, item in enumerate(res[user]):
                 if item[0] in origin[user]:
-                    DCG+= 1.0/math.log(n+2)
+                    DCG+= 1.0/math.log(n+2,2)
             for n, item in enumerate(list(origin[user].keys())[:N]):
-                IDCG+=1.0/math.log(n+2)
+                IDCG+=1.0/math.log(n+2,2)
             sum_NDCG += DCG / IDCG
         return sum_NDCG / len(res)
 
