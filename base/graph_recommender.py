@@ -83,7 +83,7 @@ class GraphRecommender(Recommender):
         print('The result of %s:\n%s' % (self.model_name, ''.join(self.result)))
 
     def fast_evaluation(self, epoch):
-        print('evaluating the model...')
+        print('Evaluating the model...')
         rec_list = self.test()
         measure = ranking_evaluation(self.data.test_set, rec_list, [self.max_N])
         if len(self.bestPerformance) > 0:
@@ -107,7 +107,7 @@ class GraphRecommender(Recommender):
             for m in measure[1:]:
                 k, v = m.strip().split(':')
                 performance[k] = float(v)
-                self.bestPerformance.append(performance)
+            self.bestPerformance.append(performance)
             self.save()
         print('-' * 120)
         print('Real-Time Ranking Performance ' + ' (Top-' + str(self.max_N) + ' Item Recommendation)')
