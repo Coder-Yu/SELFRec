@@ -48,7 +48,13 @@ torch>=1.7.0
         <td>Kang et al. <a href="https://cseweb.ucsd.edu/~jmcauley/pdfs/icdm18.pdf" target="_blank">Self-Attentive Sequential Recommendation</a>, ICDM'18.
          </td> <td>Sequential</d> <td>PyTorch</d> 
       </tr>
-   <tr>
+   <table>
+
+
+<table class="table table-hover table-bordered">
+  <tr>
+		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th>
+   </tr>
    <tr>
     <td scope="row">XSimGCL</td>
         <td>Yu et al. <a href="https://arxiv.org/abs/2209.02544" target="_blank">XSimGCL: Towards Extremely Simple Graph Contrastive Learning for Recommendation</a>, Submitted to TKDE.
