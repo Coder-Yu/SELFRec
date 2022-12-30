@@ -27,7 +27,7 @@ class Metric(object):
         hit_num = 0
         for user in hits:
             hit_num += hits[user]
-        return hit_num/total_num
+        return round(hit_num/total_num,5)
 
     # # @staticmethod
     # def hit_ratio(origin, hits):
@@ -44,18 +44,18 @@ class Metric(object):
     @staticmethod
     def precision(hits, N):
         prec = sum([hits[user] for user in hits])
-        return prec / (len(hits) * N)
+        return round(prec / (len(hits) * N),5)
 
     @staticmethod
     def recall(hits, origin):
         recall_list = [hits[user]/len(origin[user]) for user in hits]
-        recall = sum(recall_list) / len(recall_list)
+        recall = round(sum(recall_list) / len(recall_list),5)
         return recall
 
     @staticmethod
     def F1(prec, recall):
         if (prec + recall) != 0:
-            return 2 * prec * recall / (prec + recall)
+            return round(2 * prec * recall / (prec + recall),5)
         else:
             return 0
 
@@ -68,7 +68,7 @@ class Metric(object):
             count+=1
         if count==0:
             return error
-        return error/count
+        return round(error/count,5)
 
     @staticmethod
     def RMSE(res):
@@ -79,7 +79,7 @@ class Metric(object):
             count += 1
         if count==0:
             return error
-        return math.sqrt(error/count)
+        return round(math.sqrt(error/count),5)
 
     @staticmethod
     def NDCG(origin,res,N):
@@ -94,7 +94,7 @@ class Metric(object):
             for n, item in enumerate(list(origin[user].keys())[:N]):
                 IDCG+=1.0/math.log(n+2,2)
             sum_NDCG += DCG / IDCG
-        return sum_NDCG / len(res)
+        return round(sum_NDCG / len(res),5)
 
     # @staticmethod
     # def MAP(origin, res, N):

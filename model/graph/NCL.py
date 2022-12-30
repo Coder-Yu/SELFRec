@@ -104,7 +104,7 @@ class NCL(GraphRecommender):
                     optimizer.zero_grad()
                     warm_up_loss.backward()
                     optimizer.step()
-                    if n % 100 == 0:
+                    if n % 100 == 0 and n > 0:
                         print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_loss.item(), 'ssl_loss', ssl_loss.item())
                 else:
                     # Backward and optimize
@@ -113,7 +113,7 @@ class NCL(GraphRecommender):
                     optimizer.zero_grad()
                     batch_loss.backward()
                     optimizer.step()
-                    if n % 100==0:
+                    if n % 100 == 0 and n > 0:
                         print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_loss.item(), 'ssl_loss', ssl_loss.item(), 'proto_loss', proto_loss.item())
             model.eval()
             with torch.no_grad():

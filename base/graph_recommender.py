@@ -113,15 +113,15 @@ class GraphRecommender(Recommender):
         print('Real-Time Ranking Performance ' + ' (Top-' + str(self.max_N) + ' Item Recommendation)')
         measure = [m.strip() for m in measure[1:]]
         print('*Current Performance*')
-        print('Epoch:', str(epoch + 1) + ',', ' | '.join(measure))
+        print('Epoch:', str(epoch + 1) + ',', '  |  '.join(measure))
         bp = ''
         # for k in self.bestPerformance[1]:
         #     bp+=k+':'+str(self.bestPerformance[1][k])+' | '
-        bp += 'Hit Ratio' + ':' + str(self.bestPerformance[1]['Hit Ratio']) + ' | '
-        bp += 'Precision' + ':' + str(self.bestPerformance[1]['Precision']) + ' | '
-        bp += 'Recall' + ':' + str(self.bestPerformance[1]['Recall']) + ' | '
+        bp += 'Hit Ratio' + ':' + str(self.bestPerformance[1]['Hit Ratio']) + '  |  '
+        bp += 'Precision' + ':' + str(self.bestPerformance[1]['Precision']) + '  |  '
+        bp += 'Recall' + ':' + str(self.bestPerformance[1]['Recall']) + '  |  '
         # bp += 'F1' + ':' + str(self.bestPerformance[1]['F1']) + ' | '
-        bp += 'MDCG' + ':' + str(self.bestPerformance[1]['NDCG'])
+        bp += 'NDCG' + ':' + str(self.bestPerformance[1]['NDCG'])
         print('*Best Performance* ')
         print('Epoch:', str(self.bestPerformance[0]) + ',', bp)
         print('-' * 120)

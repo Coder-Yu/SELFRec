@@ -34,7 +34,7 @@ class SimGCL(GraphRecommender):
                 optimizer.zero_grad()
                 batch_loss.backward()
                 optimizer.step()
-                if n % 100==0:
+                if n % 100==0 and n>0:
                     print('training:', epoch + 1, 'batch', n, 'rec_loss:', rec_loss.item(), 'cl_loss', cl_loss.item())
             with torch.no_grad():
                 self.user_emb, self.item_emb = self.model()

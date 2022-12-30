@@ -44,6 +44,12 @@ torch>=1.7.0
 		<th>Model</th> 		<th>Paper</th>      <th>Type</th>   <th>Code</th>
    </tr>
    <tr>
+    <td scope="row">SASRec</td>
+        <td>Kang et al. <a href="https://arxiv.org/abs/2209.02544" target="_blank">Self-Attentive Sequential Recommendation</a>, ICDM'18.
+         </td> <td>SASRec</d> <td>PyTorch</d> 
+      </tr>
+   <tr>
+   <tr>
     <td scope="row">XSimGCL</td>
         <td>Yu et al. <a href="https://arxiv.org/abs/2209.02544" target="_blank">XSimGCL: Towards Extremely Simple Graph Contrastive Learning for Recommendation</a>, Submitted to TKDE.
          </td> <td>Graph + CL</d> <td>PyTorch</d> 

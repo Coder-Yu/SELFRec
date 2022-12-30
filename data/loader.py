@@ -20,9 +20,9 @@ class FileIO(object):
             remove(file_path)
 
     @staticmethod
-    def load_data_set(file, dtype):
-        data = []
-        if dtype == 'graph':
+    def load_data_set(file, rec_type):
+        if rec_type == 'graph':
+            data = []
             with open(file) as f:
                 for line in f:
                     items = split(' ', line.strip())
@@ -31,16 +31,13 @@ class FileIO(object):
                     weight = items[2]
                     data.append([user_id, item_id, float(weight)])
 
-        if dtype == 'sequential':
-            training_data, test_data = [], []
+        if rec_type == 'sequential':
+            data = {}
             with open(file) as f:
                 for line in f:
                     items = split(':', line.strip())
-                    user_id = items[0]
-                    seq = items[1].strip().split()
-                    training_data.append(seq[:-1])
-                    test_data.append(seq[-1])
-                data = (training_data, test_data)
+                    seq_id = items[0]
+                    data[seq_id]=items[1].split()
         return data
 
     @staticmethod
