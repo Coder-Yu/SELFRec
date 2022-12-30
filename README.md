@@ -45,8 +45,8 @@ torch>=1.7.0
    </tr>
    <tr>
     <td scope="row">SASRec</td>
-        <td>Kang et al. <a href="https://arxiv.org/abs/2209.02544" target="_blank">Self-Attentive Sequential Recommendation</a>, ICDM'18.
-         </td> <td>SASRec</d> <td>PyTorch</d> 
+        <td>Kang et al. <a href="https://cseweb.ucsd.edu/~jmcauley/pdfs/icdm18.pdf" target="_blank">Self-Attentive Sequential Recommendation</a>, ICDM'18.
+         </td> <td>Sequential</d> <td>PyTorch</d> 
       </tr>
    <tr>
    <tr>
