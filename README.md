@@ -50,7 +50,7 @@ torch>=1.7.0
       </tr>
    <tr>
     <td scope="row">CL4SRec</td>
-        <td>Kang et al. <a href="https://arxiv.org/abs/2010.14395" target="_blank">Contrastive Learning for Sequential Recommendation</a>, ICDE'22.
+        <td>Xie et al. <a href="https://arxiv.org/abs/2010.14395" target="_blank">Contrastive Learning for Sequential Recommendation</a>, ICDE'22.
          </td> <td>Sequential</d> <td>PyTorch</d> 
       </tr>
    <table>
