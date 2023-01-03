@@ -5,7 +5,7 @@ import torch.nn.functional as F
 def bpr_loss(user_emb, pos_item_emb, neg_item_emb):
     pos_score = torch.mul(user_emb, pos_item_emb).sum(dim=1)
     neg_score = torch.mul(user_emb, neg_item_emb).sum(dim=1)
-    loss = -torch.log(10e-8 + torch.sigmoid(pos_score - neg_score))
+    loss = -torch.log(10e-6 + torch.sigmoid(pos_score - neg_score))
     return torch.mean(loss)
 
 def triplet_loss(user_emb, pos_item_emb, neg_item_emb):
@@ -27,7 +27,7 @@ def batch_softmax_loss(user_emb, item_emb, temperature):
     pos_score = torch.exp(pos_score / temperature)
     ttl_score = torch.matmul(user_emb, item_emb.transpose(0, 1))
     ttl_score = torch.exp(ttl_score / temperature).sum(dim=1)
-    loss = -torch.log(pos_score / ttl_score)
+    loss = -torch.log(pos_score / ttl_score+10e-6)
     return torch.mean(loss)
 
 
@@ -38,7 +38,7 @@ def InfoNCE(view1, view2, temperature, b_cos = True):
     pos_score = torch.exp(pos_score / temperature)
     ttl_score = torch.matmul(view1, view2.transpose(0, 1))
     ttl_score = torch.exp(ttl_score / temperature).sum(dim=1)
-    cl_loss = -torch.log(pos_score / ttl_score)
+    cl_loss = -torch.log(pos_score / ttl_score+10e-6)
     return torch.mean(cl_loss)
 
 
