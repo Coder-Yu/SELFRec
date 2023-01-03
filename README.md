@@ -48,6 +48,11 @@ torch>=1.7.0
         <td>Kang et al. <a href="https://cseweb.ucsd.edu/~jmcauley/pdfs/icdm18.pdf" target="_blank">Self-Attentive Sequential Recommendation</a>, ICDM'18.
          </td> <td>Sequential</d> <td>PyTorch</d> 
       </tr>
+   <tr>
+    <td scope="row">CL4SRec</td>
+        <td>Kang et al. <a href="https://arxiv.org/abs/2010.14395" target="_blank">Contrastive Learning for Sequential Recommendation</a>, ICDE'22.
+         </td> <td>Sequential</d> <td>PyTorch</d> 
+      </tr>
    <table>
 
 
