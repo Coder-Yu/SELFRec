@@ -42,7 +42,6 @@ class CL4SRec(SequentialRecommender):
                     aug_emb2 = model.forward(aug_seq2, aug_pos2)
                     cl_emb1 = [aug_emb1[i, last - 1, :].view(-1, self.emb_size) for i, last in enumerate(aug_len1)]
                     cl_emb2 = [aug_emb2[i, last - 1, :].view(-1, self.emb_size) for i, last in enumerate(aug_len2)]
-                    cl_loss = self.cl_rate * InfoNCE(torch.concat(cl_emb1, 0), torch.concat(cl_emb2, 0), 1)
                 elif self.aug_type == 1: #reorder
                     aug_seq1 = SequenceAugmentor.item_reorder(seq, seq_len, self.aug_rate)
                     aug_seq2 = SequenceAugmentor.item_reorder(seq, seq_len, self.aug_rate)
@@ -50,7 +49,6 @@ class CL4SRec(SequentialRecommender):
                     aug_emb2 = model.forward(aug_seq2, pos)
                     cl_emb1 = [aug_emb1[i,last-1,:].view(-1,self.emb_size) for i,last in enumerate(seq_len)]
                     cl_emb2 = [aug_emb2[i,last-1,:].view(-1,self.emb_size) for i,last in enumerate(seq_len)]
-                    cl_loss = self.cl_rate * InfoNCE(torch.concat(cl_emb1,0),torch.concat(cl_emb2,0), 1)
                 else : # item mask
                     aug_seq1 = SequenceAugmentor.item_mask(seq, seq_len, self.aug_rate,self.data.item_num+1)
                     aug_seq2 = SequenceAugmentor.item_mask(seq, seq_len, self.aug_rate,self.data.item_num+1)
@@ -58,7 +56,7 @@ class CL4SRec(SequentialRecommender):
                     aug_emb2 = model.forward(aug_seq2, pos)
                     cl_emb1 = [aug_emb1[i, last - 1, :].view(-1, self.emb_size) for i, last in enumerate(seq_len)]
                     cl_emb2 = [aug_emb2[i, last - 1, :].view(-1, self.emb_size) for i, last in enumerate(seq_len)]
-                    cl_loss = self.cl_rate * InfoNCE(torch.concat(cl_emb1, 0), torch.concat(cl_emb2, 0), 1,False)
+                cl_loss = self.cl_rate * InfoNCE(torch.concat(cl_emb1, 0), torch.concat(cl_emb2, 0), 1,False)
                 rec_loss = self.calculate_loss(seq_emb, y, neg_idx, pos)
                 batch_loss = rec_loss+ l2_reg_loss(self.reg, model.item_emb)+cl_loss
                 # Backward and optimize
