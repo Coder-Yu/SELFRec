@@ -30,6 +30,9 @@ class SequentialRecommender(Recommender):
     def train(self):
         pass
 
+    def save(self):
+        pass
+
     def predict(self, seq):
         return -1
 

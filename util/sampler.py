@@ -96,12 +96,17 @@ def next_batch_sequence(data, batch_size,n_negs=1,max_len=50):
         pos = np.zeros((batch_end-ptr, max_len),dtype=np.int)
         y =np.zeros((batch_end-ptr, max_len),dtype=np.int)
         neg = np.zeros((batch_end-ptr, max_len),dtype=np.int)
+        seq_len = []
         for n in range(0, batch_end-ptr):
             start = len(training_data[ptr + n]) > max_len and -max_len or 0
             end =  len(training_data[ptr + n]) > max_len and max_len-1 or len(training_data[ptr + n])-1
             seq[n, :end] = training_data[ptr + n][start:-1]
+            seq_len.append(end)
             pos[n, :end] = list(range(1,end+1))
             y[n, :end]=training_data[ptr + n][start+1:]
-            neg[n,:end]=sample(item_list,end)
+            negatives=sample(item_list,end)
+            while len(set(negatives).intersection(set(training_data[ptr + n][start:-1]))) >0:
+                negatives = sample(item_list, end)
+            neg[n,:end]=negatives
         ptr=batch_end
-        yield seq, pos, y, neg
+        yield seq, pos, y, neg, np.array(seq_len,np.int)

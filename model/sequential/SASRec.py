@@ -30,9 +30,8 @@ class SASRec(SequentialRecommender):
             model.train()
             #self.fast_evaluation(epoch)
             for n, batch in enumerate(next_batch_sequence(self.data, self.batch_size,max_len=self.max_len)):
-                seq, pos, y, neg_idx = batch
+                seq, pos, y, neg_idx, _ = batch
                 seq_emb = model.forward(seq, pos)
-
                 rec_loss = self.calculate_loss(seq_emb, y, neg_idx, pos)
                 batch_loss = rec_loss+ l2_reg_loss(self.reg, model.item_emb)
                 # Backward and optimize
@@ -43,10 +42,6 @@ class SASRec(SequentialRecommender):
                     print('training:', epoch + 1, 'batch', n, 'rec_loss:', batch_loss.item())
             model.eval()
             self.fast_evaluation(epoch)
-
-    def save(self):
-        with torch.no_grad():
-            pass
 
     def calculate_loss(self, seq_emb, y, neg,pos):
         y_emb = self.model.item_emb[y]
@@ -81,7 +76,7 @@ class SASRec_Model(nn.Module):
         self._init_model()
 
     def _init_model(self):
-        initializer = nn.init.xavier_normal_
+        initializer = nn.init.xavier_uniform_
         self.item_emb = nn.Parameter(initializer(torch.empty(self.data.item_num+1, self.emb_size)))
         self.pos_emb = nn.Parameter(initializer(torch.empty(self.max_len+1, self.emb_size)))
         self.attention_layer_norms = torch.nn.ModuleList()
@@ -123,8 +118,3 @@ class SASRec_Model(nn.Module):
             seq_emb *=  ~timeline_mask.unsqueeze(-1)
         seq_emb = self.last_layer_norm(seq_emb)
         return seq_emb
-
-
-
-
-
