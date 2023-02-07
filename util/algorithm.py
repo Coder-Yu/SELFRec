@@ -1,6 +1,7 @@
 from numpy.linalg import norm
 from math import sqrt, exp
 from numba import jit
+import heapq
 
 
 def l1(x):
@@ -144,30 +145,15 @@ def denormalize(vec, max_val, min_val):
 def find_k_largest(K, candidates):
     n_candidates = []
     for iid, score in enumerate(candidates[:K]):
-        n_candidates.append((iid, score))
-    n_candidates.sort(key=lambda d: d[1], reverse=True)
-    k_largest_scores = [item[1] for item in n_candidates]
-    ids = [item[0] for item in n_candidates]
-    # find the K largest scores
+        n_candidates.append((score, iid))
+
+    heapq.heapify(n_candidates)
+
     for iid, score in enumerate(candidates[K:]):
-        ind = K
-        l = 0
-        r = K - 1
-        if k_largest_scores[r] < score:
-            while r >= l:
-                mid = int((r - l) / 2) + l
-                if k_largest_scores[mid] >= score:
-                    l = mid + 1
-                elif k_largest_scores[mid] < score:
-                    r = mid - 1
-                if r < l:
-                    ind = r
-                    break
-        # move the items backwards
-        if ind < K - 2:
-            k_largest_scores[ind + 2:] = k_largest_scores[ind + 1:-1]
-            ids[ind + 2:] = ids[ind + 1:-1]
-        if ind < K - 1:
-            k_largest_scores[ind + 1] = score
-            ids[ind + 1] = iid+K
+        if score > n_candidates[0][0]:
+            # 比堆顶元素大，入堆
+            heapq.heapreplace(n_candidates, (score, iid + K))
+    n_candidates.sort(key=lambda d: d[0], reverse=True)
+    ids = [item[1] for item in n_candidates]
+    k_largest_scores = [item[0] for item in n_candidates]
     return ids, k_largest_scores
