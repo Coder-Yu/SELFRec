@@ -56,7 +56,7 @@ class CL4SRec(SequentialRecommender):
                     aug_emb2 = model.forward(aug_seq2, pos)
                     cl_emb1 = [aug_emb1[i, last - 1, :].view(-1, self.emb_size) for i, last in enumerate(seq_len)]
                     cl_emb2 = [aug_emb2[i, last - 1, :].view(-1, self.emb_size) for i, last in enumerate(seq_len)]
-                cl_loss = self.cl_rate * InfoNCE(torch.concat(cl_emb1, 0), torch.concat(cl_emb2, 0), 1,False)
+                cl_loss = self.cl_rate * InfoNCE(torch.concat(cl_emb1, 0), torch.concat(cl_emb2, 0), 1,True)
                 rec_loss = self.calculate_loss(seq_emb, y, neg_idx, pos)
                 batch_loss = rec_loss+ l2_reg_loss(self.reg, model.item_emb)+cl_loss
                 # Backward and optimize
@@ -72,8 +72,8 @@ class CL4SRec(SequentialRecommender):
         y_emb = self.model.item_emb[y]
         neg_emb = self.model.item_emb[neg]
         indices = np.where(pos != 0)
-        pos_logits = torch.exp((seq_emb * y_emb).sum(dim=-1))
-        neg_logits = torch.exp((seq_emb * neg_emb).sum(dim=-1))
+        pos_logits = torch.exp((seq_emb * y_emb).sum(dim=-1)/0.2)
+        neg_logits = torch.exp((seq_emb * neg_emb).sum(dim=-1)/0.2)
         loss = -torch.log(pos_logits[indices]/(pos_logits[indices]+neg_logits[indices])+10e-6)
         return torch.mean(loss)
 
@@ -85,5 +85,3 @@ class CL4SRec(SequentialRecommender):
             last_item_embedding = seq_emb[0,-1,:].unsqueeze(0)
             score = torch.matmul(last_item_embedding, self.model.item_emb[:-1].transpose(0, 1))
         return score.cpu().numpy()
-
-

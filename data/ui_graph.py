@@ -46,7 +46,7 @@ class Interaction(Data,Graph):
             self.training_set_i[item][user] = rating
         for entry in self.test_data:
             user, item, rating = entry
-            if user not in self.user:
+            if user not in self.user or item not in self.item:
                 continue
             self.test_set[user][item] = rating
             self.test_set_item.add(item)
