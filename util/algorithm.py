@@ -146,12 +146,9 @@ def find_k_largest(K, candidates):
     n_candidates = []
     for iid, score in enumerate(candidates[:K]):
         n_candidates.append((score, iid))
-
     heapq.heapify(n_candidates)
-
     for iid, score in enumerate(candidates[K:]):
         if score > n_candidates[0][0]:
-            # 比堆顶元素大，入堆
             heapq.heapreplace(n_candidates, (score, iid + K))
     n_candidates.sort(key=lambda d: d[0], reverse=True)
     ids = [item[1] for item in n_candidates]
