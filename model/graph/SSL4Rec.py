@@ -66,13 +66,13 @@ class DNN_Encoder(nn.Module):
             nn.Linear(self.emb_size, 1024),
             nn.ReLU(True),
             nn.Linear(1024, 128),
-            nn.Sigmoid()
+            nn.Tanh()
         )
         self.item_tower = nn.Sequential(
             nn.Linear(self.emb_size, 1024),
             nn.ReLU(True),
             nn.Linear(1024, 128),
-            nn.Sigmoid()
+            nn.Tanh()
         )
         self.dropout = nn.Dropout(drop_rate)
         initializer = nn.init.xavier_uniform_
@@ -99,7 +99,6 @@ class DNN_Encoder(nn.Module):
         return i1_emb, i2_emb
 
     def cal_cl_loss(self, idx):
-        item_view1, item_view_2 = self.item_encoding(idx)
-        item_view1, item_view_2 = F.normalize(item_view1, dim=1), F.normalize(item_view_2, dim=1)
+        item_view1, item_view_2 = self.item_encoding(idx)       
         cl_loss = InfoNCE(item_view1, item_view_2, self.tau)
         return cl_loss
