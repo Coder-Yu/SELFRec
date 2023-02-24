@@ -17,7 +17,7 @@ def triplet_loss(user_emb, pos_item_emb, neg_item_emb):
 def l2_reg_loss(reg, *args):
     emb_loss = 0
     for emb in args:
-        emb_loss += torch.norm(emb, p=2)
+        emb_loss += torch.norm(emb, p=2)/emb.shape[0]
     return emb_loss * reg
 
 
