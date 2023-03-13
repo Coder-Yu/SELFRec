@@ -1,10 +1,8 @@
 from base.recommender import Recommender
 from data.sequence import Sequence
 from util.algorithm import find_k_largest
-from time import strftime, localtime, time
-from data.loader import FileIO
-from os.path import abspath
 from util.evaluation import ranking_evaluation
+from util.sampler import next_batch_sequence
 import sys
 
 
@@ -14,6 +12,7 @@ class SequentialRecommender(Recommender):
         self.data = Sequence(conf, training_set, test_set)
         self.bestPerformance = []
         top = self.ranking['-topN'].split(',')
+        self.max_len = int(self.config['max_len'])
         self.topN = [int(num) for num in top]
         self.max_N = max(self.topN)
 
@@ -33,7 +32,7 @@ class SequentialRecommender(Recommender):
     def save(self):
         pass
 
-    def predict(self, seq):
+    def predict(self,seq,pos,seq_len):
         return -1
 
     def test(self):
@@ -46,18 +45,16 @@ class SequentialRecommender(Recommender):
 
         # predict
         rec_list = {}
-        for i, seq in enumerate(self.data.original_seq):
-            candidates = self.predict(seq)[0]
-            # predictedItems = denormalize(predictedItems, self.data.rScale[-1], self.data.rScale[0])
-            # rated_list, li = self.data.user_rated(user)
-            # for item in rated_list:
-            #     candidates[self.data.item[item]] = -10e8
-            #candidates[0]=-10e8
-            ids, scores = find_k_largest(self.max_N, candidates)
-            item_names = [self.data.id2item[iid] for iid in ids if iid!=0]
-            rec_list[seq] = list(zip(item_names, scores))
-            if i % 1000 == 0:
-                process_bar(i, self.data.raw_seq_num)
+        for n, batch in enumerate(next_batch_sequence(self.data, self.batch_size,max_len=self.max_len,shuffled=False)):
+            seq, pos, _1, _2, seq_len = batch
+            seq_names = [seq_full[0] for seq_full in self.data.original_seq[n*self.batch_size:(n+1)*self.batch_size]]
+            candidates = self.predict(seq, pos, seq_len)
+            for name,res in zip(seq_names,candidates):
+                ids, scores = find_k_largest(self.max_N, res)
+                item_names = [self.data.id2item[iid] for iid in ids if iid!=0]
+                rec_list[name] = list(zip(item_names, scores))
+            if n % 10 == 0:
+                process_bar(n, self.data.raw_seq_num/self.batch_size)
         process_bar(self.data.raw_seq_num, self.data.raw_seq_num)
         print('')
         return rec_list

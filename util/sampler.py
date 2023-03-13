@@ -81,9 +81,10 @@ def next_batch_pointwise(data,batch_size):
 #         ptr=end
 #         yield seq, pos, seq_len, y, neg
 
-def next_batch_sequence(data, batch_size,n_negs=1,max_len=50):
-    training_data = list(data.original_seq.values())
-    shuffle(training_data)
+def next_batch_sequence(data, batch_size,n_negs=1,max_len=50,shuffled=True):
+    training_data = [item[1] for item in data.original_seq]
+    if shuffled:
+        shuffle(training_data)
     ptr = 0
     data_size = len(training_data)
     item_list = list(range(1,data.item_num+1))

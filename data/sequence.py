@@ -19,6 +19,8 @@ class Sequence(Data):
 
     def __generate_set(self):
         for seq in self.training_data:
+            if len(self.training_data[seq]) < 2:
+                continue
             if seq not in self.seq:
                 self.seq[seq] = len(self.seq)
                 self.id2seq[self.seq[seq]] = seq
@@ -36,11 +38,11 @@ class Sequence(Data):
             self.test_set[seq][self.test_data[seq][0]] = 1
             self.test_set_item.add(self.test_data[seq][0])
 
-        original_sequences = {}
+        original_sequences = []
         for seq in self.training_data:
             if len(self.training_data[seq]) < 2:
                 continue
-            original_sequences[seq]=[self.item[item] for item in self.training_data[seq]]
+            original_sequences.append((seq,[self.item[item] for item in self.training_data[seq]]))
         return original_sequences
 
     # def sequence_split(self):

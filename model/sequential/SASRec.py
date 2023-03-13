@@ -19,7 +19,6 @@ class SASRec(SequentialRecommender):
         block_num = int(args['-n_blocks'])
         drop_rate = float(args['-drop_rate'])
         head_num = int(args['-n_heads'])
-        self.max_len = int(args['-max_len'])
         self.model = SASRec_Model(self.data, self.emb_size, self.max_len, block_num,head_num,drop_rate)
         self.rec_loss = torch.nn.BCEWithLogitsLoss()
 
@@ -38,10 +37,11 @@ class SASRec(SequentialRecommender):
                 optimizer.zero_grad()
                 batch_loss.backward()
                 optimizer.step()
-                if n % 50==0 and n>0:
+                if n % 50==0:
                     print('training:', epoch + 1, 'batch', n, 'rec_loss:', batch_loss.item())
             model.eval()
-            self.fast_evaluation(epoch)
+            if epoch>=0:
+                self.fast_evaluation(epoch)
 
     def calculate_loss(self, seq_emb, y, neg,pos):
         y_emb = self.model.item_emb[y]
@@ -54,13 +54,11 @@ class SASRec(SequentialRecommender):
         loss += self.rec_loss(neg_logits[indices], neg_labels[indices])
         return loss
 
-    def predict(self, seq):
-        current_seq = np.array([self.data.original_seq[seq][-self.max_len:]],dtype=np.int)
-        pos = np.array([list(range(1,current_seq.shape[1]+1))],dtype=np.int)
+    def predict(self,seq, pos,seq_len):
         with torch.no_grad():
-            seq_emb = self.model.forward(current_seq,pos)
-            last_item_embedding = seq_emb[0,-1,:].unsqueeze(0)
-            score = torch.matmul(last_item_embedding, self.model.item_emb.transpose(0, 1))
+            seq_emb = self.model.forward(seq,pos)
+            last_item_embeddings = [seq_emb[i,last-1,:].view(-1,self.emb_size) for i,last in enumerate(seq_len)]
+            score = torch.matmul(torch.cat(last_item_embeddings,0), self.model.item_emb.transpose(0, 1))
         return score.cpu().numpy()
 
 
@@ -101,8 +99,8 @@ class SASRec_Model(nn.Module):
         seq_emb += pos_emb
         seq_emb = self.emb_dropout(seq_emb)
         timeline_mask = torch.BoolTensor(seq == 0).cuda()
-        if len(seq_emb.shape)!=3:
-            seq_emb = seq_emb.view(1,-1,self.emb_size) #for test
+        # if len(seq_emb.shape)!=3:
+        #     seq_emb = seq_emb.view(1,-1,self.emb_size) #for test
         seq_emb *= ~timeline_mask.unsqueeze(-1)
         tl = seq_emb.shape[1]
         attention_mask = ~torch.tril(torch.ones((tl, tl), dtype=torch.bool).cuda())
