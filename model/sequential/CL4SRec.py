@@ -66,8 +66,7 @@ class CL4SRec(SequentialRecommender):
                 if n % 50==0:
                     print('training:', epoch + 1, 'batch', n, 'batch_loss:', batch_loss.item(), 'rec_loss:', rec_loss.item())
             model.eval()
-            if epoch>250:
-                self.fast_evaluation(epoch)
+            self.fast_evaluation(epoch)
 
     def calculate_loss(self, seq_emb, y, neg,pos):
         y_emb = self.model.item_emb[y]

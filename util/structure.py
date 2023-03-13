@@ -7,7 +7,7 @@ class PointWiseFeedForward(torch.nn.Module):
         self.pwff = torch.nn.Sequential(
             torch.nn.Linear(hidden_units, hidden_units),
             torch.nn.Dropout(p=dropout_rate),
-            torch.nn.ReLU(),
+            torch.nn.GELU(),
             torch.nn.Linear(hidden_units, hidden_units),
             torch.nn.Dropout(p=dropout_rate)
         )

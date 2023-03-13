@@ -40,8 +40,7 @@ class SASRec(SequentialRecommender):
                 if n % 50==0:
                     print('training:', epoch + 1, 'batch', n, 'rec_loss:', batch_loss.item())
             model.eval()
-            if epoch>=0:
-                self.fast_evaluation(epoch)
+            self.fast_evaluation(epoch)
 
     def calculate_loss(self, seq_emb, y, neg,pos):
         y_emb = self.model.item_emb[y]

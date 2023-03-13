@@ -53,7 +53,7 @@ class SequentialRecommender(Recommender):
                 ids, scores = find_k_largest(self.max_N, res)
                 item_names = [self.data.id2item[iid] for iid in ids if iid!=0]
                 rec_list[name] = list(zip(item_names, scores))
-            if n % 10 == 0:
+            if n % 100 == 0:
                 process_bar(n, self.data.raw_seq_num/self.batch_size)
         process_bar(self.data.raw_seq_num, self.data.raw_seq_num)
         print('')
