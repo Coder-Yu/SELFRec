@@ -2,7 +2,7 @@ from base.recommender import Recommender
 from data.sequence import Sequence
 from util.algorithm import find_k_largest
 from util.evaluation import ranking_evaluation
-from util.sampler import next_batch_sequence
+from util.sampler import next_batch_sequence_for_test
 import sys
 
 
@@ -45,10 +45,11 @@ class SequentialRecommender(Recommender):
 
         # predict
         rec_list = {}
-        for n, batch in enumerate(next_batch_sequence(self.data, self.batch_size,max_len=self.max_len,shuffled=False)):
-            seq, pos, _1, _2, seq_len = batch
+        for n, batch in enumerate(next_batch_sequence_for_test(self.data, self.batch_size,max_len=self.max_len)):
+            seq, pos, seq_len = batch
             seq_names = [seq_full[0] for seq_full in self.data.original_seq[n*self.batch_size:(n+1)*self.batch_size]]
             candidates = self.predict(seq, pos, seq_len)
+            candidates[:, 0] = 10e-10
             for name,res in zip(seq_names,candidates):
                 ids, scores = find_k_largest(self.max_N, res)
                 item_names = [self.data.id2item[iid] for iid in ids if iid!=0]

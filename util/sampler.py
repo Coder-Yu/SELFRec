@@ -81,10 +81,9 @@ def next_batch_pointwise(data,batch_size):
 #         ptr=end
 #         yield seq, pos, seq_len, y, neg
 
-def next_batch_sequence(data, batch_size,n_negs=1,max_len=50,shuffled=True):
+def next_batch_sequence(data, batch_size,n_negs=1,max_len=50):
     training_data = [item[1] for item in data.original_seq]
-    if shuffled:
-        shuffle(training_data)
+    shuffle(training_data)
     ptr = 0
     data_size = len(training_data)
     item_list = list(range(1,data.item_num+1))
@@ -111,3 +110,24 @@ def next_batch_sequence(data, batch_size,n_negs=1,max_len=50,shuffled=True):
             neg[n,:end]=negatives
         ptr=batch_end
         yield seq, pos, y, neg, np.array(seq_len,np.int)
+
+def next_batch_sequence_for_test(data, batch_size,max_len=50):
+    sequences = [item[1] for item in data.original_seq]
+    ptr = 0
+    data_size = len(sequences)
+    while ptr < data_size:
+        if ptr+batch_size<data_size:
+            batch_end = ptr+batch_size
+        else:
+            batch_end = data_size
+        seq = np.zeros((batch_end-ptr, max_len),dtype=np.int)
+        pos = np.zeros((batch_end-ptr, max_len),dtype=np.int)
+        seq_len = []
+        for n in range(0, batch_end-ptr):
+            start = len(sequences[ptr + n]) > max_len and -max_len or 0
+            end =  len(sequences[ptr + n]) > max_len and max_len or len(sequences[ptr + n])
+            seq[n, :end] = sequences[ptr + n][start:]
+            seq_len.append(end)
+            pos[n, :end] = list(range(1,end+1))
+        ptr=batch_end
+        yield seq, pos, np.array(seq_len,np.int)
