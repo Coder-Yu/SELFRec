@@ -49,10 +49,9 @@ class SequentialRecommender(Recommender):
             seq, pos, seq_len = batch
             seq_names = [seq_full[0] for seq_full in self.data.original_seq[n*self.batch_size:(n+1)*self.batch_size]]
             candidates = self.predict(seq, pos, seq_len)
-            candidates[:, 0] = 10e-10
             for name,res in zip(seq_names,candidates):
                 ids, scores = find_k_largest(self.max_N, res)
-                item_names = [self.data.id2item[iid] for iid in ids if iid!=0]
+                item_names = [self.data.id2item[iid] for iid in ids if iid!=0 and iid<=self.data.item_num]
                 rec_list[name] = list(zip(item_names, scores))
             if n % 100 == 0:
                 process_bar(n, self.data.raw_seq_num/self.batch_size)
