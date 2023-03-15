@@ -1,5 +1,6 @@
 import torch
 import torch.nn.functional as F
+import torch.nn as nn
 
 
 def bpr_loss(user_emb, pos_item_emb, neg_item_emb):
@@ -40,6 +41,44 @@ def InfoNCE(view1, view2, temperature, b_cos = True):
     ttl_score = torch.exp(ttl_score / temperature).sum(dim=1)
     cl_loss = -torch.log(pos_score / ttl_score+10e-6)
     return torch.mean(cl_loss)
+
+
+#this version is from recbole
+def info_nce(z_i, z_j, temp, batch_size, sim='dot'):
+    """
+    We do not sample negative examples explicitly.
+    Instead, given a positive pair, similar to (Chen et al., 2017), we treat the other 2(N − 1) augmented examples within a minibatch as negative examples.
+    """
+    def mask_correlated_samples(batch_size):
+        N = 2 * batch_size
+        mask = torch.ones((N, N), dtype=bool)
+        mask = mask.fill_diagonal_(0)
+        for i in range(batch_size):
+            mask[i, batch_size + i] = 0
+            mask[batch_size + i, i] = 0
+        return mask
+
+    N = 2 * batch_size
+
+    z = torch.cat((z_i, z_j), dim=0)
+
+    if sim == 'cos':
+        sim = nn.functional.cosine_similarity(z.unsqueeze(1), z.unsqueeze(0), dim=2) / temp
+    elif sim == 'dot':
+        sim = torch.mm(z, z.T) / temp
+
+    sim_i_j = torch.diag(sim, batch_size)
+    sim_j_i = torch.diag(sim, -batch_size)
+
+    positive_samples = torch.cat((sim_i_j, sim_j_i), dim=0).reshape(N, 1)
+
+    mask = mask_correlated_samples(batch_size)
+
+    negative_samples = sim[mask].reshape(N, -1)
+
+    labels = torch.zeros(N).to(positive_samples.device).long()
+    logits = torch.cat((positive_samples, negative_samples), dim=1)
+    return F.cross_entropy(logits, labels)
 
 
 def kl_divergence(p_logit, q_logit):

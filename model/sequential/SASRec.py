@@ -98,8 +98,6 @@ class SASRec_Model(nn.Module):
         seq_emb += pos_emb
         seq_emb = self.emb_dropout(seq_emb)
         timeline_mask = torch.BoolTensor(seq == 0).cuda()
-        # if len(seq_emb.shape)!=3:
-        #     seq_emb = seq_emb.view(1,-1,self.emb_size) #for test
         seq_emb *= ~timeline_mask.unsqueeze(-1)
         tl = seq_emb.shape[1]
         attention_mask = ~torch.tril(torch.ones((tl, tl), dtype=torch.bool).cuda())
