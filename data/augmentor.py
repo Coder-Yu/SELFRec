@@ -72,3 +72,5 @@ class SequenceAugmentor(object):
             to_be_masked = random.sample(range(seq_len[i]), floor(seq_len[i]*mask_ratio))
             augmented_seq[i, to_be_masked] = mask_idx
         return augmented_seq
+
+

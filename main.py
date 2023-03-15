@@ -6,7 +6,7 @@ if __name__ == '__main__':
     graph_baselines = ['LightGCN','DirectAU','MF','SASRec']
     ssl_graph_models = ['SGL', 'SimGCL', 'SEPT', 'MHCN', 'BUIR', 'SelfCF', 'SSL4Rec', 'XSimGCL', 'NCL','MixGCF']
     sequential_baselines= ['SASRec']
-    ssl_sequential_models = ['CL4SRec']
+    ssl_sequential_models = ['CL4SRec','DuoRec','BERT4Rec']
 
     print('=' * 80)
     print('   SELFRec: A library for self-supervised recommendation.   ')

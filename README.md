@@ -53,8 +53,12 @@ torch>=1.7.0
         <td>Xie et al. <a href="https://arxiv.org/abs/2010.14395" target="_blank">Contrastive Learning for Sequential Recommendation</a>, ICDE'22.
          </td> <td>Sequential</d> <td>PyTorch</d> 
       </tr>
+   <tr>
+    <td scope="row">CL4SRec</td>
+        <td>Sun et al. <a href="https://dl.acm.org/doi/pdf/10.1145/3357384.3357895" target="_blank">BERT4Rec: Sequential Recommendation with Bidirectional Encoder Representations from Transformer</a>, CIKM'19.
+         </td> <td>Sequential</d> <td>PyTorch</d> 
+      </tr>
    <table>
-
 
 <table class="table table-hover table-bordered">
   <tr>
