@@ -54,7 +54,7 @@ torch>=1.7.0
          </td> <td>Sequential</d> <td>PyTorch</d> 
       </tr>
    <tr>
-    <td scope="row">CL4SRec</td>
+    <td scope="row">BERT4Rec</td>
         <td>Sun et al. <a href="https://dl.acm.org/doi/pdf/10.1145/3357384.3357895" target="_blank">BERT4Rec: Sequential Recommendation with Bidirectional Encoder Representations from Transformer</a>, CIKM'19.
          </td> <td>Sequential</d> <td>PyTorch</d> 
       </tr>
