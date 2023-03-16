@@ -22,8 +22,6 @@ class BERT4Rec(SequentialRecommender):
         head_num = int(args['-n_heads'])
         self.aug_rate = float(args['-mask_rate'])
         self.model = BERT_Encoder(self.data, self.emb_size, self.max_len, block_num,head_num,drop_rate)
-        initializer = nn.init.xavier_uniform_
-        self.model.item_emb = nn.Parameter(initializer(torch.empty(self.data.item_num + 2, self.emb_size)))
 
     def train(self):
         model = self.model.cuda()
@@ -66,13 +64,17 @@ class BERT4Rec(SequentialRecommender):
 
     def predict(self,seq, pos,seq_len):
         with torch.no_grad():
-            seq=np.concatenate([seq,np.zeros((seq.shape[0],1))],axis=1)
-            pos=np.concatenate([pos,np.zeros((seq.shape[0],1))],axis=1)
             for i,length in enumerate(seq_len):
-                seq[i,length] = self.data.item_num+1
-                pos[i,length] = length
+                if length == self.max_len:
+                    seq[i,:length-1] = seq[i,1:]
+                    pos[i,:length-1] = pos[i,1:]
+                    pos[i, length-1] = length
+                    seq[i, length-1] = self.data.item_num+1
+                else:
+                    pos[i, length] = length+1
+                    seq[i,length] = self.data.item_num+1
             seq_emb = self.model.forward(seq,pos)
-            last_item_embeddings = [seq_emb[i,last,:].view(-1,self.emb_size) for i,last in enumerate(seq_len)]
+            last_item_embeddings = [seq_emb[i,last-1,:].view(-1,self.emb_size) for i,last in enumerate(seq_len)]
             score = torch.matmul(torch.cat(last_item_embeddings,0), self.model.item_emb.transpose(0, 1))
         return score.cpu().numpy()
 
@@ -89,8 +91,8 @@ class BERT_Encoder(nn.Module):
 
     def _init_model(self):
         initializer = nn.init.xavier_uniform_
-        self.item_emb = nn.Parameter(initializer(torch.empty(self.data.item_num+1, self.emb_size)))
-        self.pos_emb = nn.Parameter(initializer(torch.empty(self.max_len+1, self.emb_size)))
+        self.item_emb = nn.Parameter(initializer(torch.empty(self.data.item_num+2, self.emb_size)))
+        self.pos_emb = nn.Parameter(initializer(torch.empty(self.max_len+2, self.emb_size)))
         self.attention_layer_norms = torch.nn.ModuleList()
         self.attention_layers = torch.nn.ModuleList()
         self.forward_layer_norms = torch.nn.ModuleList()
@@ -124,6 +126,6 @@ class BERT_Encoder(nn.Module):
             seq_emb = torch.transpose(seq_emb, 0, 1)
             seq_emb = self.forward_layer_norms[i](seq_emb)
             seq_emb = self.forward_layers[i](seq_emb)
-            seq_emb *=  ~timeline_mask.unsqueeze(-1)
+            seq_emb *= ~timeline_mask.unsqueeze(-1)
         seq_emb = self.last_layer_norm(seq_emb)
         return seq_emb
