@@ -86,9 +86,3 @@ def kl_divergence(p_logit, q_logit):
     kl = torch.sum(p * (F.log_softmax(p_logit, dim=-1) - F.log_softmax(q_logit, dim=-1)), 1)
     return torch.mean(kl)
 
-def js_divergence(p_logit, q_logit):
-    p = F.softmax(p_logit, dim=-1)
-    q = F.softmax(q_logit, dim=-1)
-    kl_p = torch.sum(p * (F.log_softmax(p_logit, dim=-1) - F.log_softmax(q_logit, dim=-1)), 1)
-    kl_q = torch.sum(q * (F.log_softmax(q_logit, dim=-1) - F.log_softmax(p_logit, dim=-1)), 1)
-    return torch.mean(kl_p+kl_q)
