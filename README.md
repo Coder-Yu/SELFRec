@@ -228,10 +228,11 @@ If you find this repo helpful to your research, please cite our paper.
 <p></p> 
 
 ```
-@article{yu2022self,
-  title={Self-Supervised Learning for Recommender Systems: A Survey},
+@article{yu2023self,
+  title={Self-supervised learning for recommender systems: A survey},
   author={Yu, Junliang and Yin, Hongzhi and Xia, Xin and Chen, Tong and Li, Jundong and Huang, Zi},
-  journal={arXiv preprint arXiv:2203.15876},
-  year={2022}
+  journal={IEEE Transactions on Knowledge and Data Engineering},
+  year={2023},
+  publisher={IEEE}
 }
 ```
