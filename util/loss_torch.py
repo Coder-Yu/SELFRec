@@ -32,15 +32,22 @@ def batch_softmax_loss(user_emb, item_emb, temperature):
     return torch.mean(loss)
 
 
-def InfoNCE(view1, view2, temperature, b_cos = True):
+def InfoNCE(view1, view2, temperature: float, b_cos: bool = True):
+    """
+    Args:
+        view1: (torch.Tensor - N x D)
+        view2: (torch.Tensor - N x D)
+        temperature: float
+        b_cos (bool)
+
+    Return: Average InfoNCE Loss
+    """
     if b_cos:
         view1, view2 = F.normalize(view1, dim=1), F.normalize(view2, dim=1)
-    pos_score = (view1 * view2).sum(dim=-1)
-    pos_score = torch.exp(pos_score / temperature)
-    ttl_score = torch.matmul(view1, view2.transpose(0, 1))
-    ttl_score = torch.exp(ttl_score / temperature).sum(dim=1)
-    cl_loss = -torch.log(pos_score / ttl_score+10e-6)
-    return torch.mean(cl_loss)
+
+    pos_score = (view1 @ view2.T) / temperature
+    score = torch.diag(F.log_softmax(pos_score, dim=1))
+    return -score.mean()
 
 
 #this version is from recbole
