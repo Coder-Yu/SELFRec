@@ -10,8 +10,8 @@ def bpr_loss(user_emb, pos_item_emb, neg_item_emb):
     return torch.mean(loss)
 
 def triplet_loss(user_emb, pos_item_emb, neg_item_emb):
-    pos_score = (user_emb-pos_item_emb)**2.sum(dim=1)
-    neg_score = ((user_emb-neg_item_emb)**2.sum(dim=1)
+    pos_score = ((user_emb-pos_item_emb)**2).sum(dim=1)
+    neg_score = ((user_emb-neg_item_emb)**2).sum(dim=1)
     loss = F.relu(pos_score-neg_score+0.5)
     return torch.mean(loss)
 
