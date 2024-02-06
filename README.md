@@ -8,7 +8,11 @@
 **Supported by**: [@AIhongzhi](https://github.com/AIhongzhi) (<a href="https://sites.google.com/view/hongzhi-yin/home">A/Prof. Hongzhi Yin</a>, UQ)
 
 This repo is released with our [survey paper](https://arxiv.org/abs/2203.15876) on self-supervised learning for recommender systems. We organized a tutorial on self-supervised recommendation at WWW'22. Visit the [tutorial page](https://ssl-recsys.github.io/) for more information.
-  
+
+**Supported by**:<br>
+Prof. Hongzhi Yin, The University of Queensland, Australia, h.yin1@uq.edu.au <br>
+Prof. Shazia Sadiq, ARC Training Centre for Information Resilience (CIRES), University of Queensland, Australia
+
 <h2>Architecture<h2>
 <img src="https://raw.githubusercontent.com/Coder-Yu/SELFRec/main/selfrec.jpg" alt="ssl-logo" border="0" style="width:600px">
 
