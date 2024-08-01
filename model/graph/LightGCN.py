@@ -21,9 +21,9 @@ class LightGCN(GraphRecommender):
         for epoch in range(self.maxEpoch):
             for n, batch in enumerate(next_batch_pairwise(self.data, self.batch_size)):
                 user_idx, pos_idx, neg_idx = batch
-                rec_user_emb, rec_item_emb = model()
+                rec_user_emb, rec_item_emb,embedding_dict = model()
                 user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx], rec_item_emb[pos_idx], rec_item_emb[neg_idx]
-                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, self.embedding_dict['user_emb'][user_idx],self.embedding_dict['item_emb'][pos_idx],self.embedding_dict['item_emb'][neg_idx])/self.batch_size
+                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, embedding_dict['user_emb'][user_idx],embedding_dict['item_emb'][pos_idx],embedding_dict['item_emb'][neg_idx])/self.batch_size
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()
@@ -31,7 +31,7 @@ class LightGCN(GraphRecommender):
                 if n % 100==0 and n>0:
                     print('training:', epoch + 1, 'batch', n, 'batch_loss:', batch_loss.item())
             with torch.no_grad():
-                self.user_emb, self.item_emb = model()
+                self.user_emb, self.item_emb,_ = model()
             if epoch % 5 == 0:
                 self.fast_evaluation(epoch)
         self.user_emb, self.item_emb = self.best_user_emb, self.best_item_emb
@@ -40,7 +40,7 @@ class LightGCN(GraphRecommender):
 
     def save(self):
         with torch.no_grad():
-            self.best_user_emb, self.best_item_emb = self.model.forward()
+            self.best_user_emb, self.best_item_emb,_ = self.model.forward()
 
     def predict(self, u):
         u = self.data.get_user_id(u)
@@ -76,6 +76,6 @@ class LGCN_Encoder(nn.Module):
         all_embeddings = torch.mean(all_embeddings, dim=1)
         user_all_embeddings = all_embeddings[:self.data.user_num]
         item_all_embeddings = all_embeddings[self.data.user_num:]
-        return user_all_embeddings, item_all_embeddings
+        return user_all_embeddings, item_all_embeddings, self.embedding_dict
 
 
