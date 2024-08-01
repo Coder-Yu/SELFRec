@@ -23,7 +23,7 @@ class LightGCN(GraphRecommender):
                 user_idx, pos_idx, neg_idx = batch
                 rec_user_emb, rec_item_emb = model()
                 user_emb, pos_item_emb, neg_item_emb = rec_user_emb[user_idx], rec_item_emb[pos_idx], rec_item_emb[neg_idx]
-                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, self.embedding_dict['user_emb'][user_idx],self.embedding_dict['item_emb'][pos_idx],self.embedding_dict['item_emb'][neg_idx])/self.batch_size
+                batch_loss = bpr_loss(user_emb, pos_item_emb, neg_item_emb) + l2_reg_loss(self.reg, model.embedding_dict['user_emb'][user_idx],model.embedding_dict['item_emb'][pos_idx],model.embedding_dict['item_emb'][neg_idx])/self.batch_size
                 # Backward and optimize
                 optimizer.zero_grad()
                 batch_loss.backward()
