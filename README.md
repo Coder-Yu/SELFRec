@@ -18,25 +18,16 @@ Prof. Shazia Sadiq, ARC Training Centre for Information Resilience (CIRES), Univ
 
 <h2>Features</h2>
 <ul>
-<li><b>Fast execution</b>: SELFRec is compatible with Python 3.9+, Tensorflow 1.14+, and PyTorch 1.8+ and powered by GPUs. We also optimize the time-consuming item ranking procedure, drastically reducing ranking time to seconds. </li>
+<li><b>Fast execution</b>: SELFRec is compatible with Python 3.9+, Tensorflow 1.14+ (optional), and PyTorch 1.8+ and powered by GPUs. We also optimize the time-consuming item ranking procedure, drastically reducing ranking time to seconds. </li>
 <li><b>Easy configuration</b>: SELFRec provides simple and high-level interfaces, making it easy to add new SSR models in a plug-and-play fashion.</li>
 <li><b>Highly Modularized</b>: SELFRec is divided into multiple discrete and independent modules. This design decouples model design from other procedures, allowing users to focus on the logic of their method and streamlining development.</li>
 <li><b>SSR-Specific</b>:  SELFRec is designed specifically for SSR. It provides specific modules and interfaces for rapid development of data augmentation and self-supervised tasks.</li>
 </ul>
 
-<h2>Requirements</h2>
-	
-```
-numba==0.53.1
-numpy==1.20.3
-scipy==1.6.2
-tensorflow==1.14.0
-torch>=1.7.0
-```
-
-<h2>Usage</h2>
+<h2>How to Use</h2>
 <ol>
-<li>Configure the xx.conf file in the directory named conf. (xx is the name of the model you want to run)</li>
+<li>Execute pip install -r requirements.txt under the SELFRec directory</li>
+<li>Configure the xx.yaml file in the directory named conf. (xx is the name of the model you want to run)</li>
 <li>Run main.py and choose the model you want to run.</li>
 </ol>
 
