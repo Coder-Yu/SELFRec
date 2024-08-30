@@ -73,11 +73,11 @@ class SequentialRecommender(Recommender):
             self.bestPerformance = [epoch + 1, performance]
             self.save()
 
-        print('-' * 120)
+        print('-' * 80)
         print(f'Real-Time Ranking Performance (Top-{self.max_N} Item Recommendation)')
         measure_str = ', '.join([f'{k}: {v}' for k, v in performance.items()])
         print(f'*Current Performance*\nEpoch: {epoch + 1}, {measure_str}')
         bp = ', '.join([f'{k}: {v}' for k, v in self.bestPerformance[1].items()])
         print(f'*Best Performance*\nEpoch: {self.bestPerformance[0]}, {bp}')
-        print('-' * 120)
+        print('-' * 80)
         return measure

@@ -19,7 +19,7 @@ class SELFRec(object):
 
     def execute(self):
         # import the model module
-        import_str = 'from model.'+ self.config['model']['type'] +'.' + self.config['model']['name'] + ' import ' + self.config['model']['name']
+        import_str = f"from model.{self.config['model']['type']}.{self.config['model']['name']} import {self.config['model']['name']}"
         exec(import_str)
-        recommender = self.config['model']['name'] + '(self.config,self.training_data,self.test_data,**self.kwargs)'
+        recommender = f"{self.config['model']['name']}(self.config,self.training_data,self.test_data,**self.kwargs)"
         eval(recommender).execute()
