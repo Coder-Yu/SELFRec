@@ -26,7 +26,7 @@ Prof. Shazia Sadiq, ARC Training Centre for Information Resilience (CIRES), Univ
 
 <h2>How to Use</h2>
 <ol>
-<li>Execute pip install -r requirements.txt under the SELFRec directory</li>
+<li>Execute <b>pip install -r requirements.txt</b> under the SELFRec directory</li>
 <li>Configure the xx.yaml file in the directory named conf. (xx is the name of the model you want to run)</li>
 <li>Run main.py and choose the model you want to run.</li>
 </ol>
