@@ -1,0 +1,26 @@
+training.set: ./dataset/yelp2018/train.txt
+
+test.set: ./dataset/yelp2018/test.txt
+
+model:
+  name: NCL
+  type: graph
+
+item.ranking.topN: [10,20]
+
+embedding.size: 64
+max.epoch: 120
+batch.size: 2048
+learning.rate: 0.001
+reg.lambda: 0.0001
+
+NCL:
+  n_layer: 3
+  ssl_reg: 1e-6
+  proto_reg: 1e-7
+  tau: 0.05
+  hyper_layers: 1
+  alpha: 1.5
+  num_clusters: 2000
+
+output: ./results/

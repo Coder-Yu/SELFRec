@@ -4,7 +4,6 @@ from scipy.sparse import eye
 import numpy as np
 from base.tf_interface import TFGraphInterface
 import os
-from util.conf import OptionConf
 from util.loss_tf import bpr_loss
 from data.social import Relation
 from data.augmentor import GraphAugmentor
@@ -18,11 +17,11 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 class SEPT(GraphRecommender):
     def __init__(self, conf, training_set, test_set, **kwargs):
         GraphRecommender.__init__(self, conf, training_set, test_set, **kwargs)
-        args = OptionConf(self.config['SEPT'])
-        self.n_layers = int(args['-n_layer'])
-        self.ss_rate = float(args['-ss_rate'])
-        self.drop_rate = float(args['-drop_rate'])
-        self.instance_cnt = int(args['-ins_cnt'])
+        args = self.config['SEPT']
+        self.n_layers = int(args['n_layer'])
+        self.ss_rate = float(args['ss_rate'])
+        self.drop_rate = float(args['drop_rate'])
+        self.instance_cnt = int(args['ins_cnt'])
         self.social_data = Relation(conf, kwargs['social.data'], self.data.user)
 
     def print_model_info(self):

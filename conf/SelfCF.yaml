@@ -1,0 +1,21 @@
+training.set: ./dataset/yelp2018/train.txt
+
+test.set: ./dataset/yelp2018/test.txt
+
+model:
+  name: SelfCF
+  type: graph
+
+item.ranking.topN: [10,20]
+
+embedding.size: 64
+max.epoch: 100
+batch.size: 2048
+learning.rate: 0.001
+reg.lambda: 0.0001
+
+SelfCF:
+  n_layer: 2
+  tau: 0.05
+
+output: ./results/

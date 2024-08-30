@@ -1,0 +1,23 @@
+training.set: ./dataset/douban-book/train.txt
+
+test.set: ./dataset/douban-book/test.txt
+
+social.data: ./dataset/douban-book/trust.txt
+
+model:
+  name: MHCN
+  type: graph
+
+item.ranking.topN: [10,20]
+
+embedding.size: 64
+max.epoch: 30
+batch.size: 2048
+learning.rate: 0.001
+reg.lambda: 0.0001
+
+MHCN:
+  n_layer: 2
+  ss_rate: 0.01
+
+output: ./results/

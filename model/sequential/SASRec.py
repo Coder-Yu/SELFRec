@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 from base.seq_recommender import SequentialRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_sequence
 from util.structure import PointWiseFeedForward
 from util.loss_torch import l2_reg_loss
@@ -15,10 +14,10 @@ from util.loss_torch import l2_reg_loss
 class SASRec(SequentialRecommender):
     def __init__(self, conf, training_set, test_set):
         super(SASRec, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['SASRec'])
-        block_num = int(args['-n_blocks'])
-        drop_rate = float(args['-drop_rate'])
-        head_num = int(args['-n_heads'])
+        args = self.config['SASRec']
+        block_num = int(args['n_blocks'])
+        drop_rate = float(args['drop_rate'])
+        head_num = int(args['n_heads'])
         self.model = SASRec_Model(self.data, self.emb_size, self.max_len, block_num,head_num,drop_rate)
         self.rec_loss = torch.nn.BCEWithLogitsLoss()
 

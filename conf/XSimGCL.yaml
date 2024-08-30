@@ -1,0 +1,24 @@
+training.set: ./dataset/yelp2018/train.txt
+
+test.set: ./dataset/yelp2018/test.txt
+
+model:
+  name: XSimGCL
+  type: graph
+
+item.ranking.topN: [10,20]
+
+embedding.size: 64
+max.epoch: 20
+batch.size: 2048
+learning.rate: 0.001
+reg.lambda: 0.0001
+
+XSimGCL:
+  n_layer: 2
+  l_star: 1
+  lambda: 0.2
+  eps: 0.2
+  tau: 0.15
+
+output: ./results/

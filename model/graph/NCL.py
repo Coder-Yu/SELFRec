@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
 from util.loss_torch import bpr_loss, l2_reg_loss, InfoNCE
@@ -13,14 +12,14 @@ import faiss
 class NCL(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
         super(NCL, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['NCL'])
-        self.n_layers = int(args['-n_layer'])
-        self.ssl_temp = float(args['-tau'])
-        self.ssl_reg = float(args['-ssl_reg'])
-        self.hyper_layers = int(args['-hyper_layers'])
-        self.alpha = float(args['-alpha'])
-        self.proto_reg = float(args['-proto_reg'])
-        self.k = int(args['-num_clusters'])
+        args = self.config['NCL']
+        self.n_layers = int(args['n_layer'])
+        self.ssl_temp = float(args['tau'])
+        self.ssl_reg = float(args['ssl_reg'])
+        self.hyper_layers = int(args['hyper_layers'])
+        self.alpha = float(args['alpha'])
+        self.proto_reg = float(args['proto_reg'])
+        self.k = int(args['num_clusters'])
         self.model = LGCN_Encoder(self.data, self.emb_size, self.n_layers)
         self.user_centroids = None
         self.user_2cluster = None

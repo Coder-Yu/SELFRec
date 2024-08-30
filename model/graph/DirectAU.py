@@ -1,7 +1,6 @@
 import torch
 import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from util.loss_torch import bpr_loss,l2_reg_loss
 from model.graph.MF import Matrix_Factorization
@@ -10,9 +9,9 @@ from model.graph.LightGCN import LGCN_Encoder
 class DirectAU(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
         super(DirectAU, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['DirectAU'])
-        self.gamma = float(args['-gamma'])
-        self.n_layers= int(args['-n_layers'])
+        args = self.config['DirectAU']
+        self.gamma = float(args['gamma'])
+        self.n_layers= int(args['n_layers'])
         self.model = LGCN_Encoder(self.data, self.emb_size,self.n_layers)
 
     def train(self):

@@ -1,0 +1,24 @@
+training.set: ./dataset/amazon-beauty/train.txt
+
+test.set: ./dataset/amazon-beauty/test.txt
+
+model:
+  name: SASRec
+  type: sequential
+
+item.ranking.topN: [10,20]
+
+embedding.size: 64
+max.epoch: 500
+batch.size: 256
+learning.rate: 0.001
+reg.lambda: 0.0001
+
+max.len: 50
+
+SASRec:
+  n_blocks: 2
+  drop_rate: 0.2
+  n_heads: 1
+
+output: ./results/

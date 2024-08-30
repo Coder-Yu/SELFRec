@@ -18,7 +18,7 @@ Prof. Shazia Sadiq, ARC Training Centre for Information Resilience (CIRES), Univ
 
 <h2>Features</h2>
 <ul>
-<li><b>Fast execution</b>: SELFRec is compatible with Python 3.8+, Tensorflow 1.14+, and PyTorch 1.8+ and powered by GPUs. We also optimize the time-consuming item ranking procedure, drastically reducing ranking time to seconds. </li>
+<li><b>Fast execution</b>: SELFRec is compatible with Python 3.9+, Tensorflow 1.14+, and PyTorch 1.8+ and powered by GPUs. We also optimize the time-consuming item ranking procedure, drastically reducing ranking time to seconds. </li>
 <li><b>Easy configuration</b>: SELFRec provides simple and high-level interfaces, making it easy to add new SSR models in a plug-and-play fashion.</li>
 <li><b>Highly Modularized</b>: SELFRec is divided into multiple discrete and independent modules. This design decouples model design from other procedures, allowing users to focus on the logic of their method and streamlining development.</li>
 <li><b>SSR-Specific</b>:  SELFRec is designed specifically for SSR. It provides specific modules and interfaces for rapid development of data augmentation and self-supervised tasks.</li>

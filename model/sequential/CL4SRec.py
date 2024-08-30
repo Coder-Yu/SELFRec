@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 from base.seq_recommender import SequentialRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_sequence
 from model.sequential.SASRec import SASRec_Model
 from util.loss_torch import l2_reg_loss,InfoNCE,batch_softmax_loss
@@ -14,13 +13,13 @@ from data.augmentor import SequenceAugmentor
 class CL4SRec(SequentialRecommender):
     def __init__(self, conf, training_set, test_set):
         super(CL4SRec, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['CL4SRec'])
-        block_num = int(args['-n_blocks'])
-        drop_rate = float(args['-drop_rate'])
-        head_num = int(args['-n_heads'])
-        self.aug_type = int(args['-aug_type'])
-        self.aug_rate = float(args['-aug_rate'])
-        self.cl_rate = float(args['-cl_rate'])
+        args = self.config['CL4SRec']
+        block_num = int(args['n_blocks'])
+        drop_rate = float(args['drop_rate'])
+        head_num = int(args['n_heads'])
+        self.aug_type = int(args['aug_type'])
+        self.aug_rate = float(args['aug_rate'])
+        self.cl_rate = float(args['cl_rate'])
         self.model = SASRec_Model(self.data, self.emb_size, self.max_len, block_num,head_num,drop_rate)
         initializer = nn.init.xavier_uniform_
         self.model.item_emb = nn.Parameter(initializer(torch.empty(self.data.item_num + 2, self.emb_size)))

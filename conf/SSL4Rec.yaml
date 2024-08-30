@@ -1,0 +1,22 @@
+training.set: ./dataset/ml-1M/train.txt
+
+test.set: ./dataset/ml-1M/test.txt
+
+model:
+  name: SSL4Rec
+  type: graph
+
+item.ranking.topN: [20]
+
+embedding.size: 64
+max.epoch: 100
+batch.size: 2048
+learning.rate: 0.001
+reg.lambda: 0.0001
+
+SSL4Rec:
+  tau: 0.07
+  alpha: 0.1
+  drop: 0.1
+
+output: ./results/

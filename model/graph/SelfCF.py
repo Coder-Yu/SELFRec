@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from model.graph.LightGCN import LGCN_Encoder
 
@@ -14,9 +13,9 @@ from model.graph.LightGCN import LGCN_Encoder
 class SelfCF(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
         super(SelfCF, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['SelfCF'])
-        self.momentum = float(args['-tau'])
-        self.n_layers = int(args['-n_layer'])
+        args = self.config['SelfCF']
+        self.momentum = float(args['tau'])
+        self.n_layers = int(args['n_layer'])
         self.model = SelfCF_HE(self.data, self.emb_size, self.momentum, self.n_layers)
 
     def train(self):

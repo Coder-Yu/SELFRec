@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
 
@@ -14,10 +13,10 @@ from base.torch_interface import TorchGraphInterface
 class BUIR(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
         super(BUIR, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['BUIR'])
-        self.momentum = float(args['-tau'])
-        self.n_layers = int(args['-n_layer'])
-        self.drop_rate = float(args['-drop_rate'])
+        args = self.config['BUIR']
+        self.momentum = float(args['tau'])
+        self.n_layers = int(args['n_layer'])
+        self.drop_rate = float(args['drop_rate'])
         self.model = BUIR_NB(self.data, self.emb_size, self.momentum, self.n_layers, self.drop_rate, True)
 
     def train(self):

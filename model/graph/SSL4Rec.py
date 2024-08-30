@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from util.loss_torch import l2_reg_loss, InfoNCE, batch_softmax_loss
 
@@ -17,10 +16,10 @@ because items features are not always available in many academic datasets.
 class SSL4Rec(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
         super(SSL4Rec, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['SSL4Rec'])
-        self.cl_rate = float(args['-alpha'])
-        self.tau = float(args['-tau'])
-        self.drop_rate = float(args['-drop'])
+        args = self.config['SSL4Rec']
+        self.cl_rate = float(args['alpha'])
+        self.tau = float(args['tau'])
+        self.drop_rate = float(args['drop'])
         self.model = DNN_Encoder(self.data, self.emb_size, self.drop_rate, self.tau)
 
     def train(self):

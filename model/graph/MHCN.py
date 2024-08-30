@@ -4,7 +4,6 @@ from util.loss_tf import bpr_loss
 from data.social import Relation
 from base.tf_interface import TFGraphInterface
 from util.sampler import next_batch_pairwise
-from util.conf import OptionConf
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
@@ -14,9 +13,9 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 class MHCN(GraphRecommender):
     def __init__(self, conf, training_set, test_set, **kwargs):
         GraphRecommender.__init__(self, conf, training_set, test_set, **kwargs)
-        args = OptionConf(self.config['MHCN'])
-        self.n_layers = int(args['-n_layer'])
-        self.ss_rate = float(args['-ss_rate'])
+        args = self.config['MHCN']
+        self.n_layers = int(args['n_layer'])
+        self.ss_rate = float(args['ss_rate'])
         self.social_data = Relation(conf, kwargs['social.data'], self.data.user)
 
     def print_model_info(self):

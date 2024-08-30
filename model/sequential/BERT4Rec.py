@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from base.seq_recommender import SequentialRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_sequence
 from util.loss_torch import l2_reg_loss
 from util.structure import PointWiseFeedForward
@@ -16,11 +15,11 @@ import random
 class BERT4Rec(SequentialRecommender):
     def __init__(self, conf, training_set, test_set):
         super(BERT4Rec, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['BERT4Rec'])
-        block_num = int(args['-n_blocks'])
-        drop_rate = float(args['-drop_rate'])
-        head_num = int(args['-n_heads'])
-        self.aug_rate = float(args['-mask_rate'])
+        args =self.config['BERT4Rec']
+        block_num = int(args['n_blocks'])
+        drop_rate = float(args['drop_rate'])
+        head_num = int(args['n_heads'])
+        self.aug_rate = float(args['mask_rate'])
         self.model = BERT_Encoder(self.data, self.emb_size, self.max_len, block_num,head_num,drop_rate)
 
     def train(self):

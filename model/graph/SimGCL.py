@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from base.graph_recommender import GraphRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
 from util.loss_torch import bpr_loss, l2_reg_loss, InfoNCE
@@ -13,10 +12,10 @@ from util.loss_torch import bpr_loss, l2_reg_loss, InfoNCE
 class SimGCL(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
         super(SimGCL, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['SimGCL'])
-        self.cl_rate = float(args['-lambda'])
-        self.eps = float(args['-eps'])
-        self.n_layers = int(args['-n_layer'])
+        args = self.config['SimGCL']
+        self.cl_rate = float(args['lambda'])
+        self.eps = float(args['eps'])
+        self.n_layers = int(args['n_layer'])
         self.model = SimGCL_Encoder(self.data, self.emb_size, self.eps, self.n_layers)
 
     def train(self):

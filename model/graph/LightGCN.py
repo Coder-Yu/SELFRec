@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 from base.graph_recommender import GraphRecommender
-from util.conf import OptionConf
 from util.sampler import next_batch_pairwise
 from base.torch_interface import TorchGraphInterface
 from util.loss_torch import bpr_loss,l2_reg_loss
@@ -11,8 +10,8 @@ from util.loss_torch import bpr_loss,l2_reg_loss
 class LightGCN(GraphRecommender):
     def __init__(self, conf, training_set, test_set):
         super(LightGCN, self).__init__(conf, training_set, test_set)
-        args = OptionConf(self.config['LightGCN'])
-        self.n_layers = int(args['-n_layer'])
+        args = self.config['LightGCN']
+        self.n_layers = int(args['n_layer'])
         self.model = LGCN_Encoder(self.data, self.emb_size, self.n_layers)
 
     def train(self):
