@@ -145,7 +145,7 @@ General hyperparameter settings are: batch_size: 2048, emb_size: 64, learning ra
 
 <h2>Implement Your Model</h2>
  
-1. Create a **.conf** file for your model in the directory named conf.
+1. Create a **.yaml** file for your model in the directory named conf.
 2. Make your model **inherit** the proper base class.
 3. **Reimplement** the following functions.
 	+ *build*(), *train*(), *save*(), *predict*()
