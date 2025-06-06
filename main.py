@@ -9,7 +9,7 @@ def print_models(title, models):
 
 if __name__ == '__main__':
     models = {
-        'Graph-Based Baseline Models': ['LightGCN', 'DirectAU', 'MF'],
+        'Graph-Based Baseline Models': ['LightGCN', 'DirectAU', 'MF', 'UserKNN', 'ItemKNN'],
         'Self-Supervised Graph-Based Models': ['SGL', 'SimGCL', 'SEPT', 'MHCN', 'BUIR', 'SelfCF', 'SSL4Rec', 'XSimGCL', 'NCL', 'MixGCF'],
         'Sequential Baseline Models': ['SASRec'],
         'Self-Supervised Sequential Models': ['CL4SRec', 'BERT4Rec']

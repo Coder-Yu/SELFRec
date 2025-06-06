@@ -36,12 +36,12 @@ class Interaction(Data, Graph):
                 item_id = len(self.item)
                 self.item[item] = item_id
                 self.id2item[item_id] = item
-            self.training_set_u[user][item] = rating
-            self.training_set_i[item][user] = rating
+            self.training_set_u[user][item] = 1
+            self.training_set_i[item][user] = 1
 
         for user, item, rating in self.test_data:
             if user in self.user and item in self.item:
-                self.test_set[user][item] = rating
+                self.test_set[user][item] = 1
                 self.test_set_item.add(item)
 
     def __create_sparse_bipartite_adjacency(self, self_connection=False):
